@@ -4,6 +4,11 @@
 
 - [Help](https://n-pn.fr/t/2318-c--programmation-systeme-execve-fork-et-pipe)
 - [Kind of cheat](https://csnotes.medium.com/pipex-tutorial-42-project-4469f5dd5901)
+- https://elearning.intra.42.fr/notions/57/subnotions/245/videos/203
+
+# TODO
+
+-
 
 # Exploration
 
@@ -44,9 +49,17 @@ else
 
 ## dup / dup2
 
+- [stackoverflow](https://stackoverflow.com/questions/7861611/can-someone-explain-what-dup-in-c-does)
+
 ## pipe
 
+- [Geeksforgeeks](https://www.geeksforgeeks.org/pipe-system-call/)
+
 ## execve
+
+- [video intra minishell1](https://elearning.intra.42.fr/notions/minishell/subnotions)
+- [video intra minishell2](https://cdn.intra.42.fr/video/video/203/low_d_ft_sh2.mp4)
+- [No path search](https://stackoverflow.com/questions/10068327/what-does-execve-do)
 
 ## unlink
 
