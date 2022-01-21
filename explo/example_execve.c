@@ -6,9 +6,6 @@
 
 int main(int argc, char *argv[], char *env[])
 {
-
-	printf("%s\n", env[0]);
-
 	printf("My pid is: %d\n", getpid());
 
 	if (argc > 1)

@@ -12,7 +12,9 @@ int main()
 	printf("This twice\n");
 
 	if (fork_status == 0)
-		printf("In fork_status == 0 condition, %d\n", fork_status);
+	{
+		printf("In fork_status == 0 condition, child process, %d\n", fork_status);
+	}
 	else if (fork_status != -1)
 		printf("In fork_status != -1 condition, %d\n", fork_status);
 	else

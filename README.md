@@ -50,6 +50,8 @@ else
 ## dup / dup2
 
 - [stackoverflow](https://stackoverflow.com/questions/7861611/can-someone-explain-what-dup-in-c-does)
+- `new_fd = dup(fd)` duplique dans un nouveau fd libre (new_fd). Par exemple, si fd = 3, `dup(3)` creera un nouveau fd, new_fd = 4 identique a fd. On peut donc fermer fd et utiliser new_fd.
+- `dup2(fd, STDIN_FILENO)` duplique fd dans STDIN_FILENO. Ainsi, STDIN_FILENO devient fd.
 
 ## pipe
 
@@ -60,6 +62,7 @@ else
 - [video intra minishell1](https://elearning.intra.42.fr/notions/minishell/subnotions)
 - [video intra minishell2](https://cdn.intra.42.fr/video/video/203/low_d_ft_sh2.mp4)
 - [No path search](https://stackoverflow.com/questions/10068327/what-does-execve-do)
+- [execve using stdin](https://stackoverflow.com/questions/36083984/execve-with-redirected-stdin-from-file)
 
 ## unlink
 
