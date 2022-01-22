@@ -17,24 +17,23 @@
 # include <sys/wait.h>
 # include <stdio.h>
 # include <stdlib.h>
-//# include "libft.h"
+# include "libft.h"
 
 // User-defined types
-typedef struct s_lstcmd
+typedef struct s_cmd
 {
-	char	*cmd;
+	char	**cmd;
 	void	*next;
-}	t_lstcmd;
+}	t_cmd;
 
-typedef struct s_files
-{
-	char	*infile;
-	char	*outfile;
-}	t_files;
+// Main functions
+void	check_input(int argc, char **argv);
+t_cmd	*parse_input(int argc, char **argv, char **envp);
+void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst);
 
 // Secondaries functions
-void	check_args(int ac, char **av);
 
 // Utilities functions
+void	ft_lstadd_back2(t_cmd **alst, t_cmd *new);
 
 #endif

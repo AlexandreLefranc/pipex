@@ -27,15 +27,12 @@ void ft_print_fd(int fd)
 {
 	char buffer[1024];
 	int r;
-	int fd_dup;
 
-	fd_dup = dup(fd);
-	while ((r = read(fd_dup, buffer, 1023)) != 0)
+	while ((r = read(fd, buffer, 1023)) != 0)
 	{
 		buffer[r] = '\0';
 		ft_putstr_fd(buffer, 1);
 	}
-	close(fd_dup);
 }
 
 int run_cmd_to_fd(int fdin, char **cmd)
@@ -92,13 +89,9 @@ int main()
 
 	pid_t	pid;
 
-	int pdes[2];
-
 	int fd = open(infile, O_RDONLY);
 	int fd2 = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	int fdbis;
-
-	pipe(pdes);
 
 	pid = fork();
 
@@ -107,16 +100,13 @@ int main()
 	else if (pid == 0)
 	{
 		// Child
-		fdbis = run_cmd_to_fd(fd, cmd_lst->cmd);
-		dup2(fdbis, fd);
-		close(fdbis);
-		cmd_lst = cmd_lst->next;
-
-		fdbis = run_cmd_to_fd(fd, cmd_lst->cmd);
-		dup2(fdbis, fd);
-		close(fdbis);
-		cmd_lst = cmd_lst->next;
-
+		while (cmd_lst->next != NULL)
+		{
+			fdbis = run_cmd_to_fd(fd, cmd_lst->cmd);
+			dup2(fdbis, fd);
+			close(fdbis);
+			cmd_lst = cmd_lst->next;
+		}
 		fdbis = run_cmd_to_fd(fd, cmd_lst->cmd);
 		dup2(fd2, STDOUT_FILENO);
 		close(fd2);

@@ -1,29 +1,26 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: alefranc <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/15 13:32:46 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/15 13:32:50 by alefranc         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "pipex.h"
 
-int	main(int ac, char **av, char **env)
+void	ft_strtabprint(char **tab)
 {
-	// t_lstcmd	lstcmd;
-	// t_files		files;
+	int	i;
 
-	(void)env;
-	// int i = 0;
-	// while (env[i] != NULL)
-	// {
-	// 	printf("%s\n", env[i]);
-	// 	i++;
-	// }
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		ft_putendl_fd(tab[i], 1);
+		i++;
+	}
+}
 
-	check_args(ac, av);
+
+// clangc src/pipex.c src/check_input.c src/parse_input.c src/pipex_utils.c libft.a -L. -Iincludes -Ilibft/include && ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_cmd	*cmd_lst;
+
+	check_input(argc, argv);
+	cmd_lst = parse_input(argc, argv, envp);
+	//run_pipex(argv[1], argv[argc - 1], cmd_lst);
+	return (0);
 }
