@@ -21,6 +21,6 @@ int	main(int argc, char **argv, char **envp)
 
 	check_input(argc, argv);
 	cmd_lst = parse_input(argc, argv, envp);
-	//run_pipex(argv[1], argv[argc - 1], cmd_lst);
+	run_pipex(argv[1], argv[argc - 1], cmd_lst);
 	return (0);
 }
