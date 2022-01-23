@@ -36,5 +36,7 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst);
 
 // Utilities functions
 void	ft_lstadd_back2(t_cmd **alst, t_cmd *new);
+void	ft_strtabfree(char **tab);
+t_cmd	*ft_lstfreenext(t_cmd *cmd_lst);
 
 #endif

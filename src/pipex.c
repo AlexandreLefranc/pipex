@@ -13,7 +13,7 @@ void	ft_strtabprint(char **tab)
 }
 
 
-// clangc src/pipex.c src/check_input.c src/parse_input.c src/pipex_utils.c libft.a -L. -Iincludes -Ilibft/include && ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt
+// clangc src/pipex.c src/check_input.c src/parse_input.c src/pipex_utils.c src/run_pipex.c libft.a -L. -Iincludes -Ilibft/include && ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt
 
 int	main(int argc, char **argv, char **envp)
 {

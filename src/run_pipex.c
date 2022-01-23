@@ -49,13 +49,13 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst)
 		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd);
 		dup2(fdtmp, fdin);
 		close(fdtmp);
-		cmd_lst = cmd_lst->next;
-		//cmd_lst = ft_lstfreenext(cmd_lst);
+		//cmd_lst = cmd_lst->next;
+		cmd_lst = ft_lstfreenext(cmd_lst);
 	}
 	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
 	ft_print_fd(fdtmp);
 	close(fdtmp);
-	//ft_lstfreenext(cmd_lst);
+	ft_lstfreenext(cmd_lst);
 }

@@ -16,3 +16,27 @@ void	ft_lstadd_back2(t_cmd **alst, t_cmd *new)
 		lst = lst->next;
 	lst->next = new;
 }
+
+void	ft_strtabfree(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+t_cmd	*ft_lstfreenext(t_cmd *cmd_lst)
+{
+	t_cmd	*old_cmd;
+
+	old_cmd = cmd_lst;
+	cmd_lst = cmd_lst->next;
+	ft_strtabfree(old_cmd->cmd);
+	free(old_cmd);
+	return (cmd_lst);
+}
