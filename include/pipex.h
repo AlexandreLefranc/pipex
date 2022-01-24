@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alefranc <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/15 13:24:45 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:25:30 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst);
 void	ft_lstadd_back2(t_cmd **alst, t_cmd *new);
 void	ft_strtabfree(char **tab);
 t_cmd	*ft_lstfreenext(t_cmd *cmd_lst);
+void	ft_lstfree(t_cmd *cmd_lst);
 
 #endif

@@ -6,11 +6,25 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:14 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/24 00:10:15 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:25:11 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+char	*extract_path_from_env(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
+			return (envp[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
 
 char	*path_search(char *cmd, char *path)
 {
@@ -35,20 +49,6 @@ char	*path_search(char *cmd, char *path)
 	return (NULL);
 }
 
-char	*extract_path_from_env(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i] + 5);
-		i++;
-	}
-	return (NULL);
-}
-
 char	**format_cmd(char *fullcmd, char *path)
 {
 	char	**new_cmd;
@@ -58,17 +58,25 @@ char	**format_cmd(char *fullcmd, char *path)
 	expanded_cmd = path_search(new_cmd[0], path);
 	free(new_cmd[0]);
 	new_cmd[0] = expanded_cmd;
+	if (expanded_cmd == NULL)
+	{
+		ft_strtabfree(new_cmd);
+		return (NULL);
+	}
 	return (new_cmd);
 }
 
-void	append_lst(t_cmd **cmd_list, char *fullcmd, char *path)
+int	append_lst(t_cmd **cmd_lst, char *fullcmd, char *path)
 {
 	t_cmd	*node;
 
 	node = malloc(sizeof(*node) * 1);
 	node->next = NULL;
 	node->cmd = format_cmd(fullcmd, path);
-	ft_lstadd_back2(cmd_list, node);
+	ft_lstadd_back2(cmd_lst, node);
+	if (node->cmd == NULL)
+		return (-1);
+	return (0);
 }
 
 t_cmd	*parse_input(int argc, char **argv, char **envp)
@@ -76,13 +84,20 @@ t_cmd	*parse_input(int argc, char **argv, char **envp)
 	int		i;
 	t_cmd	*cmd_lst;
 	char	*path;
+	int		ret;
 
 	cmd_lst = NULL;
 	path = extract_path_from_env(envp);
 	i = 2;
 	while (i < argc - 1)
 	{
-		append_lst(&cmd_lst, argv[i], path);
+		ret = append_lst(&cmd_lst, argv[i], path);
+		if (ret == -1)
+		{
+			ft_lstfree(cmd_lst);
+			perror("A command cannot be found in path");
+			exit(1);
+		}
 		i++;
 	}
 	return (cmd_lst);

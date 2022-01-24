@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:09:29 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/24 00:09:36 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:25:22 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	ft_strtabfree(char **tab)
 {
 	int	i;
 
+	if (tab == NULL)
+		return ;
 	i = 0;
 	while (tab[i] != NULL)
 	{
@@ -51,4 +53,10 @@ t_cmd	*ft_lstfreenext(t_cmd *cmd_lst)
 	ft_strtabfree(old_cmd->cmd);
 	free(old_cmd);
 	return (cmd_lst);
+}
+
+void	ft_lstfree(t_cmd *cmd_lst)
+{
+	while (cmd_lst != NULL)
+		cmd_lst = ft_lstfreenext(cmd_lst);
 }
