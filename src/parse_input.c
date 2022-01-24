@@ -46,7 +46,7 @@ char	*path_search(char *cmd, char *path)
 		i++;
 	}
 	ft_strfreetab(path_splitted);
-	return (NULL);
+	return (ft_strdup(cmd));
 }
 
 char	**format_cmd(char *fullcmd, char *path)
@@ -58,11 +58,6 @@ char	**format_cmd(char *fullcmd, char *path)
 	expanded_cmd = path_search(new_cmd[0], path);
 	free(new_cmd[0]);
 	new_cmd[0] = expanded_cmd;
-	if (expanded_cmd == NULL)
-	{
-		ft_strtabfree(new_cmd);
-		return (NULL);
-	}
 	return (new_cmd);
 }
 
@@ -74,8 +69,6 @@ int	append_lst(t_cmd **cmd_lst, char *fullcmd, char *path)
 	node->next = NULL;
 	node->cmd = format_cmd(fullcmd, path);
 	ft_lstadd_back2(cmd_lst, node);
-	if (node->cmd == NULL)
-		return (-1);
 	return (0);
 }
 
@@ -84,20 +77,13 @@ t_cmd	*parse_input(int argc, char **argv, char **envp)
 	int		i;
 	t_cmd	*cmd_lst;
 	char	*path;
-	int		ret;
 
 	cmd_lst = NULL;
 	path = extract_path_from_env(envp);
 	i = 2;
 	while (i < argc - 1)
 	{
-		ret = append_lst(&cmd_lst, argv[i], path);
-		if (ret == -1)
-		{
-			ft_lstfree(cmd_lst);
-			perror("A command cannot be found in path");
-			exit(1);
-		}
+		append_lst(&cmd_lst, argv[i], path);
 		i++;
 	}
 	return (cmd_lst);

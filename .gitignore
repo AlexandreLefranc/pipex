@@ -2,6 +2,8 @@
 .DS_Store
 *.swp
 *.swo
+pipex-tester/
+PIPEXaminator/
 
 # Prerequisites
 *.d

@@ -43,6 +43,9 @@ int	run_cmd_to_fd(int fdin, char **cmd, char **envp)
 		dup2(pdes[1], STDOUT_FILENO);
 		close(pdes[1]);
 		execve(cmd[0], cmd, envp);
+		close(pdes[0]);
+		perror("command not found");
+		return (0);
 	}
 	close(fdin);
 	close(pdes[1]);
@@ -66,9 +69,10 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
 	}
 	while (cmd_lst->next != NULL)
 	{
-		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
-		dup2(fdtmp, fdin);
-		close(fdtmp);
+
+		//fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
+		// dup2(fdtmp, fdin);
+		// close(fdtmp);
 		cmd_lst = ft_lstfreenext(cmd_lst);
 	}
 	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
