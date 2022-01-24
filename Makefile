@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/01/24 01:54:17 by alefranc         ###   ########.fr        #
+#    Updated: 2022/01/24 02:08:24 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFTDIR = libft/
 LIBFT = libft.a
 
 CC = clang
-FLAGS = -Wall -Wextra -Werror -c
+FLAGS = -Wall -Wextra -Werror
 INC_FLAG = -Iinclude -I$(LIBFTDIR)include
 LIB_FLAG = $(LIBFTDIR)$(LIBFT)
 
@@ -33,11 +33,14 @@ HEADER = include/pipex.h
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(LIBFTDIR)$(LIBFT) $(OBJ)
+	$(CC) $(FLAGS) $(INC_FLAG) $(OBJ) $(LIBFTDIR)$(LIBFT) -o $(NAME)
+
+$(LIBFTDIR)$(LIBFT):
 	make -C $(LIBFTDIR)
 
 $(SRCDIR)%.o: $(SRCDIR)%.c $(HEADER)
-	$(CC) $(FLAGS) $(INC_FLAG) $< -o $@
+	$(CC) $(FLAGS) -c $(INC_FLAG) $< -o $@
 
 clean:
 	make -C $(LIBFTDIR) clean
@@ -46,6 +49,8 @@ clean:
 fclean: clean
 	make -C $(LIBFTDIR) fclean
 	rm -rf $(NAME)
+
+re: fclean all
 
 test:
 	echo $(HEADER)
