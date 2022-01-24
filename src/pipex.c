@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:19 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/24 00:41:00 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:36:47 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ int	main(int argc, char **argv, char **envp)
 
 	check_input(argc, argv);
 	cmd_lst = parse_input(argc, argv, envp);
-	run_pipex(argv[1], argv[argc - 1], cmd_lst);
+	run_pipex(argv[1], argv[argc - 1], cmd_lst, envp);
 	return (0);
 }

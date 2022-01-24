@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:22 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/24 00:40:03 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:38:05 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_print_fd(int fd)
 	}
 }
 
-int	run_cmd_to_fd(int fdin, char **cmd)
+int	run_cmd_to_fd(int fdin, char **cmd, char **envp)
 {
 	pid_t	pid;
 	int		pdes[2];
@@ -42,7 +42,7 @@ int	run_cmd_to_fd(int fdin, char **cmd)
 		close(fdin);
 		dup2(pdes[1], STDOUT_FILENO);
 		close(pdes[1]);
-		execve(cmd[0], cmd, NULL);
+		execve(cmd[0], cmd, envp);
 	}
 	close(fdin);
 	close(pdes[1]);
@@ -50,7 +50,7 @@ int	run_cmd_to_fd(int fdin, char **cmd)
 	return (pdes[0]);
 }
 
-void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst)
+void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
 {
 	int	fdin;
 	int	fdout;
@@ -58,14 +58,20 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst)
 
 	fdin = open(infile, O_RDONLY);
 	fdout = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (fdin == -1 || fdout == -1)
+	{
+		ft_lstfree(cmd_lst);
+		perror("Failed to open infile and/or outfile");
+		exit(1);
+	}
 	while (cmd_lst->next != NULL)
 	{
-		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd);
+		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
 		dup2(fdtmp, fdin);
 		close(fdtmp);
 		cmd_lst = ft_lstfreenext(cmd_lst);
 	}
-	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd);
+	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
 	ft_print_fd(fdtmp);

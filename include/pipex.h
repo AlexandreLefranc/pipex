@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/24 03:25:30 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:36:58 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_cmd
 // Main functions
 void	check_input(int argc, char **argv);
 t_cmd	*parse_input(int argc, char **argv, char **envp);
-void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst);
+void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp);
 
 // Secondaries functions
 
