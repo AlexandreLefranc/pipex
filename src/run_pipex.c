@@ -1,18 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_pipex.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/24 00:10:22 by alefranc          #+#    #+#             */
+/*   Updated: 2022/01/24 00:40:03 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
-void ft_print_fd(int fd)
+void	ft_print_fd(int fd)
 {
-	char buffer[1024];
-	int r;
+	char	buffer[1024];
+	int		r;
 
-	while ((r = read(fd, buffer, 1023)) != 0)
+	r = read(fd, buffer, 1023);
+	while (r != 0)
 	{
 		buffer[r] = '\0';
 		ft_putstr_fd(buffer, 1);
+		r = read(fd, buffer, 1023);
 	}
 }
 
-int run_cmd_to_fd(int fdin, char **cmd)
+int	run_cmd_to_fd(int fdin, char **cmd)
 {
 	pid_t	pid;
 	int		pdes[2];
@@ -49,7 +63,6 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst)
 		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd);
 		dup2(fdtmp, fdin);
 		close(fdtmp);
-		//cmd_lst = cmd_lst->next;
 		cmd_lst = ft_lstfreenext(cmd_lst);
 	}
 	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd);

@@ -1,19 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/24 00:10:19 by alefranc          #+#    #+#             */
+/*   Updated: 2022/01/24 00:41:00 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
-void	ft_strtabprint(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i] != NULL)
-	{
-		ft_putendl_fd(tab[i], 1);
-		i++;
-	}
-}
-
-
-// clangc src/pipex.c src/check_input.c src/parse_input.c src/pipex_utils.c src/run_pipex.c libft.a -L. -Iincludes -Ilibft/include && ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt
+// clangc src/* libft.a -L. -Iinclude -Ilibft/include
+// ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt
 
 int	main(int argc, char **argv, char **envp)
 {
