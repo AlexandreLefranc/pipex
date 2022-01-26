@@ -20,5 +20,9 @@ void	check_input(int argc, char **argv)
 		ft_putendl_fd("Example: ./pipex pipex \"ls -l\" \"wc -l\" out.txt ", 2);
 		exit(1);
 	}
-	(void)argv;
+	if (access(argv[1], R_OK))
+	{
+		perror("Infile doesn't exist or cannot be read");
+		exit(1);
+	}
 }

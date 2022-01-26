@@ -12,21 +12,6 @@
 
 #include "pipex.h"
 
-void	ft_strtabfree(char **tab)
-{
-	int	i;
-
-	if (tab == NULL)
-		return ;
-	i = 0;
-	while (tab[i] != NULL)
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
 void	ft_lstadd_back2(t_cmd **alst, t_cmd *new)
 {
 	t_cmd	*lst;
@@ -44,6 +29,21 @@ void	ft_lstadd_back2(t_cmd **alst, t_cmd *new)
 	lst->next = new;
 }
 
+void	ft_strtabfree(char **tab)
+{
+	int	i;
+
+	if (tab == NULL)
+		return ;
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
 t_cmd	*ft_lstfreenext(t_cmd *cmd_lst)
 {
 	t_cmd	*old_cmd;
@@ -59,21 +59,4 @@ void	ft_lstfree(t_cmd *cmd_lst)
 {
 	while (cmd_lst != NULL)
 		cmd_lst = ft_lstfreenext(cmd_lst);
-}
-
-void	ft_lstprint(t_cmd *lst)
-{
-	char	**cmd;
-
-	while (lst != NULL)
-	{
-		cmd = lst->cmd;
-		while (*cmd != NULL)
-		{
-			ft_putendl_fd(*cmd, 1);
-			cmd++;
-		}
-		ft_putendl_fd("", 1);
-		lst = lst->next;
-	}
 }

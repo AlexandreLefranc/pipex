@@ -86,5 +86,6 @@ t_cmd	*parse_input(int argc, char **argv, char **envp)
 		append_lst(&cmd_lst, argv[i], path);
 		i++;
 	}
+	//ft_lstprint(cmd_lst);
 	return (cmd_lst);
 }

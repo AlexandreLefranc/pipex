@@ -26,31 +26,52 @@ void	ft_print_fd(int fd)
 	}
 }
 
+void	child(int pdes[2], int fdin, char **cmd, char **envp)
+{
+	close(pdes[0]);
+	dup2(fdin, STDIN_FILENO);
+	close(fdin);
+	dup2(pdes[1], STDOUT_FILENO);
+	close(pdes[1]);
+	execve(cmd[0], cmd, envp);
+	exit(1);
+}
+
+int	parent(int pdes[2], int fdin, pid_t pid)
+{
+	int	exit_code;
+
+	close(fdin);
+	close(pdes[1]);
+	waitpid(pid, &exit_code, 0);
+	if (exit_code != 0)
+		exit(exit_code / 256);
+	return (pdes[0]);
+}
+
 int	run_cmd_to_fd(int fdin, char **cmd, char **envp)
 {
 	pid_t	pid;
 	int		pdes[2];
 
+	if (access(cmd[0], X_OK) != 0)
+	{
+		perror("Command not found");
+		return(0);
+	}
 	pipe(pdes);
 	pid = fork();
 	if (pid == -1)
 		exit(1);
 	else if (pid == 0)
 	{
-		close(pdes[0]);
-		dup2(fdin, STDIN_FILENO);
-		close(fdin);
-		dup2(pdes[1], STDOUT_FILENO);
-		close(pdes[1]);
-		execve(cmd[0], cmd, envp);
-		close(pdes[0]);
-		perror("command not found");
-		return (0);
+		child(pdes, fdin, cmd, envp);
 	}
-	close(fdin);
-	close(pdes[1]);
-	wait(&pid);
-	return (pdes[0]);
+	else
+	{
+		return(parent(pdes, fdin, pid));
+	}
+	return(-1);
 }
 
 void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
@@ -59,21 +80,25 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
 	int	fdout;
 	int	fdtmp;
 
-	fdin = open(infile, O_RDONLY);
 	fdout = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	fdin = open(infile, O_RDONLY);
 	if (fdin == -1 || fdout == -1)
 	{
-		ft_lstfree(cmd_lst);
-		perror("Failed to open infile and/or outfile");
+		perror("Cannot open infile or outfile");
 		exit(1);
 	}
 	while (cmd_lst->next != NULL)
 	{
-
-		//fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
-		// dup2(fdtmp, fdin);
-		// close(fdtmp);
+		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
+		dup2(fdtmp, fdin);
+		close(fdtmp);
 		cmd_lst = ft_lstfreenext(cmd_lst);
+	}
+	if (access(cmd_lst->cmd[0], X_OK) != 0)
+	{
+		ft_lstfreenext(cmd_lst);
+		perror("Commad not found");
+		exit(127);
 	}
 	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
 	dup2(fdout, STDOUT_FILENO);
