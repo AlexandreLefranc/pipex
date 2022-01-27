@@ -57,7 +57,7 @@ int	run_cmd_to_fd(int fdin, char **cmd, char **envp)
 	if (access(cmd[0], X_OK) != 0)
 	{
 		perror("Command not found");
-		return(0);
+		return (0);
 	}
 	pipe(pdes);
 	pid = fork();
@@ -69,9 +69,9 @@ int	run_cmd_to_fd(int fdin, char **cmd, char **envp)
 	}
 	else
 	{
-		return(parent(pdes, fdin, pid));
+		return (parent(pdes, fdin, pid));
 	}
-	return(-1);
+	return (-1);
 }
 
 void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
@@ -83,22 +83,18 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
 	fdout = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	fdin = open(infile, O_RDONLY);
 	if (fdin == -1 || fdout == -1)
-	{
-		perror("Cannot open infile or outfile");
-		exit(1);
-	}
+		ft_perror_exit("Cannot open infile or outfile", 1);
 	while (cmd_lst->next != NULL)
 	{
 		fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
 		dup2(fdtmp, fdin);
-		close(fdtmp);
 		cmd_lst = ft_lstfreenext(cmd_lst);
 	}
 	if (access(cmd_lst->cmd[0], X_OK) != 0)
 	{
 		ft_lstfreenext(cmd_lst);
-		perror("Commad not found");
-		exit(127);
+		ft_perror_exit("Command not found", 127);
+
 	}
 	fdtmp = run_cmd_to_fd(fdin, cmd_lst->cmd, envp);
 	dup2(fdout, STDOUT_FILENO);

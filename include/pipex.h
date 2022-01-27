@@ -40,7 +40,6 @@ void	ft_lstadd_back2(t_cmd **alst, t_cmd *new);
 void	ft_strtabfree(char **tab);
 t_cmd	*ft_lstfreenext(t_cmd *cmd_lst);
 void	ft_lstfree(t_cmd *cmd_lst);
-
-void	ft_lstprint(t_cmd *lst);
+void	ft_perror_exit(char const *errmsg, int errnumber);
 
 #endif

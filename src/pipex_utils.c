@@ -61,19 +61,8 @@ void	ft_lstfree(t_cmd *cmd_lst)
 		cmd_lst = ft_lstfreenext(cmd_lst);
 }
 
-void	ft_lstprint(t_cmd *lst)
+void	ft_perror_exit(char const *errmsg, int errnumber)
 {
-	char	**cmd;
-
-	while (lst != NULL)
-	{
-		cmd = lst->cmd;
-		while (*cmd != NULL)
-		{
-			ft_putendl_fd(*cmd, 1);
-			cmd++;
-		}
-		ft_putendl_fd("", 1);
-		lst = lst->next;
-	}
+	perror(errmsg);
+	exit(errnumber);
 }
