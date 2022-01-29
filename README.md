@@ -1,5 +1,28 @@
 # pipex
 
+- Recode behavior of `< file1 cmd1 | cmd2 > file2`.
+- One bonus is extending it to `< file 1 cmd1 | cmd2 | ... | cmdn > file2`.
+- Function allowed :
+	- access
+	- open
+	- close
+	- unlink
+	- read
+	- write
+	- malloc
+	- waitpid
+	- wait
+	- free
+	- pipe
+	- dup
+	- dup2
+	- execve
+	- fork
+	- perror
+	- strerror
+	- exit
+
+
 # Help
 
 - [Help](https://n-pn.fr/t/2318-c--programmation-systeme-execve-fork-et-pipe)
@@ -46,6 +69,8 @@ else
 ## access
 
 - [access](https://codeforwin.org/2018/03/c-program-check-file-or-directory-exists-not.html)
+- Return 0 when success and -1 on fail.
+- On fail, errno is set to 2 (No such file or directory) or 13 (Permission denied)
 
 ## dup / dup2
 
@@ -70,16 +95,44 @@ else
 - It seems to unlink a filename to a file. Which is equivalent to a deletion.
 
 
-# Structure
+# Pseudo-code
 
-```
-lst_cmd = {echo;next}>{cmd1;next}>{cmd2;next}>{cmd3;next}
-files = {infile;outfile}
+Main
+
+```c
+main(argc, argv, envp):
+	check_input(argc, argv, envp)
+	list = parse_input(argc, argv, envp)
+	run_pipex(list, argc, argv, envp)
 ```
 
+check input
+
+```c
+if argc < 5:
+	print_usage
+	exit
 ```
-parse + check input
-open infile (readonly)
-open outfile (writeonly)
+
+parse_input
+
+```c
+list = create_list(argv)
+```
+
+run_pipex
+
+```c
+get_infilename
+get_outfilename
+while there are commands:
+	access and open infile
+	if failed:
+		print error
+		find a way to
+		continue
+	duplicate fd_infile in STDIN_FILENO
+	run the command to fd_tmp
+	duplicate fd_tmp to 
 
 ```

@@ -6,11 +6,11 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:19 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/29 13:12:47 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/01/24 03:36:47 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex2.h"
+#include "pipex.h"
 
 // clangc src2/* libft.a -L. -Iinclude -Ilibft/include
 // ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt

@@ -18,7 +18,7 @@ LIBFT = libft.a
 CC = clang
 FLAGS = -Wall -Wextra -Werror
 INC_FLAG = -Iinclude -I$(LIBFTDIR)include
-LIB_FLAG = $(LIBFTDIR)$(LIBFT)
+# LIB_FLAG = $(LIBFTDIR)$(LIBFT)
 
 SRCDIR = src/
 SRCFILES = 	pipex.c \

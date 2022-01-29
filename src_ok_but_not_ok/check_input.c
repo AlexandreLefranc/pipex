@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   check_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/24 00:10:19 by alefranc          #+#    #+#             */
-/*   Updated: 2022/01/29 13:12:47 by alefranc         ###   ########.fr       */
+/*   Created: 2022/01/24 00:10:06 by alefranc          #+#    #+#             */
+/*   Updated: 2022/01/24 02:19:10 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex2.h"
+#include "pipex.h"
 
-// clangc src2/* libft.a -L. -Iinclude -Ilibft/include
-// ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt
-
-int	main(int argc, char **argv, char **envp)
+void	check_input(int argc, char **argv)
 {
-	t_cmd	*cmd_lst;
-
-	check_input(argc, argv);
-	cmd_lst = parse_input(argc, argv, envp);
-	run_pipex(argv[1], argv[argc - 1], cmd_lst, envp);
-	return (0);
+	if (argc < 5)
+	{
+		ft_putendl_fd("Usage: ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2", 2);
+		ft_putendl_fd("Example: ./pipex pipex \"ls -l\" \"wc -l\" out.txt ", 2);
+		exit(1);
+	}
+	(void)argv;
 }
