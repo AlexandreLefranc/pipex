@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex2.h"
+#include "pipex.h"
 
 // clangc src2/* libft.a -L. -Iinclude -Ilibft/include
 // ./a.out infile.txt "ls -l -a" "wc -l" outfile.txt

@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-char	*extract_path_from_env(char **envp)
+static char	*extract_path_from_env(char **envp)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ char	*extract_path_from_env(char **envp)
 	return (NULL);
 }
 
-char	*path_search(char *cmd, char *path)
+static char	*path_search(char *cmd, char *path)
 {
 	int		i;
 	char	*full_pathname;
@@ -49,7 +49,7 @@ char	*path_search(char *cmd, char *path)
 	return (ft_strdup(cmd));
 }
 
-char	**format_cmd(char *fullcmd, char *path)
+static char	**format_cmd(char *fullcmd, char *path)
 {
 	char	**new_cmd;
 	char	*expanded_cmd;
@@ -61,7 +61,7 @@ char	**format_cmd(char *fullcmd, char *path)
 	return (new_cmd);
 }
 
-int	append_lst(t_cmd **cmd_lst, char *fullcmd, char *path)
+static int	append_lst(t_cmd **cmd_lst, char *fullcmd, char *path)
 {
 	t_cmd	*node;
 
@@ -83,6 +83,11 @@ t_cmd	*parse_input(int argc, char **argv, char **envp)
 	i = 2;
 	while (i < argc - 1)
 	{
+		if (argv[i][0] == '\0')
+		{
+			i++;
+			continue;
+		}
 		append_lst(&cmd_lst, argv[i], path);
 		i++;
 	}

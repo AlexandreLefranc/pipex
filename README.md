@@ -122,7 +122,7 @@ list = create_list(argv)
 
 run_pipex
 
-```c
+```
 get_infilename
 get_outfilename
 while there are commands:
@@ -133,6 +133,104 @@ while there are commands:
 		continue
 	duplicate fd_infile in STDIN_FILENO
 	run the command to fd_tmp
-	duplicate fd_tmp to 
+	duplicate fd_tmp to
+```
 
+
+```
+run first command:
+	pipe
+	open infile
+	if open fail:
+		close pipe write_end
+		return pipe read_end
+	fork
+	child:
+		close pipe read_end
+		dup infile in stdin + close
+		dup pipe write_end in stdout + close
+		execve cmd
+		perror and exit
+	parent:
+		wait child
+		close infile
+		close pipe write end
+		return pipe read end
+
+while there are commands:
+	run mid commands:
+		pipe
+		fork
+		child:
+			dup previous_pipe_read_end in stdin + close
+			dup pipe write_end in stdout
+			execve cmd
+			perror and exit
+		parent:
+			wait child
+			close prev_pipe_read_end
+			close pipe write_end
+			return pipe read_end
+
+end:
+	open outfile
+	dup outfile in stdout
+	read previous fd
+	close outfile
+	exit 0
+
+```
+
+OR
+
+For each command, write in in temporary file and at each new command, treat this temporary file as infile. And at the end, copy the content in outfile.
+
+# List of tests
+
+## Normal use
+
+```
+./pipex pipex "ls -l" "grep txt" "wc -l" out_mine
+< pipex ls -l | grep txt | wc -l > out_real
+```
+
+---
+
+```
+echo "Hey\nje suis\nasdkl\n\n ds\n trer\n" > infile
+
+./pipex infile "tr 'a' 'e'" "grep e" "wc -l" out_mine
+< infile tr 'a' 'e' | grep e | wc -l > out_real
+```
+
+## Error use
+
+```
+touch wronly
+chmod 222 wronly
+
+./pipex wronly "ls -l" "grep txt" "wc -l" out_mine
+< wronly ls -l | grep txt | wc -l > out_real
+```
+
+
+```
+touch rdonly
+chmod 444 rdonly
+
+./pipex pipex "ls -l" "wc -l" rdonly
+< pipex ls -l | wc -l > rdonly
+```
+
+
+```
+./pipex pipex "" "wc -l" out_mine
+< pipex | wc -l > out_real
+```
+
+
+Not behave well :
+```
+./pipex pipex "" "" out_mine
+< pipex | > out_real
 ```
