@@ -6,25 +6,11 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:22 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/01 14:49:01 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/01 16:27:36 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	ft_print_fd(int fd)
-{
-	char	buffer[1024];
-	int		r;
-
-	r = read(fd, buffer, 1023);
-	while (r != 0)
-	{
-		buffer[r] = '\0';
-		ft_putstr_fd(buffer, 1);
-		r = read(fd, buffer, 1023);
-	}
-}
 
 int run_first_command(char *infile, char **cmd, char **envp)
 {

@@ -209,8 +209,8 @@ echo "Hey\nje suis\nasdkl\n\n ds\n trer\n" > infile
 touch wronly
 chmod 222 wronly
 
-./pipex wronly "ls -l" "grep txt" "wc -l" out_mine
-< wronly ls -l | grep txt | wc -l > out_real
+./pipex wronly "ls -l" "wc -l" out_mine
+< wronly ls -l | wc -l > out_real
 ```
 
 
@@ -229,8 +229,7 @@ chmod 444 rdonly
 ```
 
 
-Not behave well :
 ```
-./pipex pipex "" "" out_mine
-< pipex | > out_real
+./pipex Makefile "" "" out_mine
+< Makefile | > out_real
 ```
