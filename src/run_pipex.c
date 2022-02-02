@@ -6,13 +6,13 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:22 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/01 16:27:36 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/02 12:21:00 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
+static int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
 {
 	int		pdes[2];
 	int		fdin;
@@ -37,6 +37,7 @@ int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
 		close(pdes[1]);
 		execve((cmd_lst->cmd)[0], cmd_lst->cmd, envp);
 		perror("execve1 failed: command not found");
+		ft_lstfree(cmd_lst);
 		exit(127);
 	}
 	else if (pid > 0)
@@ -53,7 +54,7 @@ int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
 	}
 }
 
-int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
+static int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
 {
 	int		pdes[2];
 	pid_t	pid;
@@ -92,7 +93,7 @@ int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
 	}
 }
 
-void write_fdtmp_to_outfile(int fdtmp, int fdout, char *outfile)
+static void write_fdtmp_to_outfile(int fdtmp, int fdout, char *outfile)
 {
 	if (fdout == -1)
 	{
@@ -105,7 +106,7 @@ void write_fdtmp_to_outfile(int fdtmp, int fdout, char *outfile)
 	close(fdtmp);
 }
 
-void write_infile_to_outfile(char *infile, int fdout, char *outfile)
+static void write_infile_to_outfile(char *infile, int fdout, char *outfile)
 {
 	int fdin;
 
