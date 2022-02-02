@@ -12,7 +12,7 @@
 
 #include "pipex.h"
 
-int run_first_command(char *infile, char **cmd, char **envp)
+int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
 {
 	int		pdes[2];
 	int		fdin;
@@ -35,8 +35,8 @@ int run_first_command(char *infile, char **cmd, char **envp)
 		close(fdin);
 		dup2(pdes[1], STDOUT_FILENO);
 		close(pdes[1]);
-		execve(cmd[0], cmd, envp);
-		perror("execve failed: command not found");
+		execve((cmd_lst->cmd)[0], cmd_lst->cmd, envp);
+		perror("execve1 failed: command not found");
 		exit(127);
 	}
 	else if (pid > 0)
@@ -53,7 +53,7 @@ int run_first_command(char *infile, char **cmd, char **envp)
 	}
 }
 
-int	run_next_command(int fdtmp, char **cmd, char **envp)
+int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
 {
 	int		pdes[2];
 	pid_t	pid;
@@ -68,8 +68,9 @@ int	run_next_command(int fdtmp, char **cmd, char **envp)
 		close(fdtmp);
 		dup2(pdes[1], STDOUT_FILENO);
 		close(pdes[1]);
-		execve(cmd[0], cmd, envp);
-		perror("execve failed: command not found");
+		execve((cmd_lst->cmd)[0], cmd_lst->cmd, envp);
+		perror("execve2 failed: command not found");
+		ft_lstfree(cmd_lst);
 		exit(127);
 	}
 	else if (pid > 0)
@@ -78,7 +79,10 @@ int	run_next_command(int fdtmp, char **cmd, char **envp)
 		close(fdtmp);
 		waitpid(pid, &execve_status, 0);
 		if (execve_status != 0)
+		{
+			ft_lstfree(cmd_lst);
 			exit(execve_status / 256);
+		}
 		return (pdes[0]);
 	}
 	else
@@ -125,11 +129,11 @@ void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
 		write_infile_to_outfile(infile, fdout, outfile);
 		exit(1);
 	}
-	fdtmp = run_first_command(infile, cmd_lst->cmd, envp);
+	fdtmp = run_first_command(infile, cmd_lst, envp);
 	cmd_lst = ft_lstfreenext(cmd_lst);
 	while (cmd_lst != NULL)
 	{
-		fdtmp = run_next_command(fdtmp, cmd_lst->cmd, envp);
+		fdtmp = run_next_command(fdtmp, cmd_lst, envp);
 		cmd_lst = ft_lstfreenext(cmd_lst);
 	}
 	write_fdtmp_to_outfile(fdtmp, fdout, outfile);

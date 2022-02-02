@@ -3,6 +3,10 @@
 *.swp
 *.swo
 pipex
+out*
+a.out
+rdonly
+wronly
 pipex-tester/
 PIPEXaminator/
 

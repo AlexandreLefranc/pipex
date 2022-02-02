@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/02/01 14:30:44 by alefranc         ###   ########.fr        #
+#    Updated: 2022/02/02 11:40:35 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIBFTDIR = libft/
 LIBFT = libft.a
 
 CC = clang
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g3
 INC_FLAG = -Iinclude -I$(LIBFTDIR)include
 # LIB_FLAG = $(LIBFTDIR)$(LIBFT)
 

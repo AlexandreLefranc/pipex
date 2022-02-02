@@ -122,20 +122,6 @@ list = create_list(argv)
 
 run_pipex
 
-```
-get_infilename
-get_outfilename
-while there are commands:
-	access and open infile
-	if failed:
-		print error
-		find a way to
-		continue
-	duplicate fd_infile in STDIN_FILENO
-	run the command to fd_tmp
-	duplicate fd_tmp to
-```
-
 
 ```
 run first command:
