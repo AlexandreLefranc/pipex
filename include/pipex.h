@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/01 15:16:07 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/02 06:26:29 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ t_cmd	*parse_input(int argc, char **argv, char **envp);
 void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp);
 
 // Secondaries functions
+void	run_first_cmd_child(int pdes[2], t_cmd *cmd_lst, int fdin, char **envp);
+int		run_first_cmd_parent(int pdes[2], int fdin);
+void	run_next_cmd_child(int pdes[2], t_cmd *cmd_lst, int fdtmp, char **envp);
 
 // Utilities functions
 void	ft_lstadd_back2(t_cmd **alst, t_cmd *new);

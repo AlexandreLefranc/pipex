@@ -6,18 +6,17 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:22 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/02 12:21:00 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/02 06:24:51 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
+static int	run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
 {
 	int		pdes[2];
 	int		fdin;
 	pid_t	pid;
-	int		execve_status;
 
 	pipe(pdes);
 	fdin = open(infile, O_RDONLY);
@@ -29,29 +28,15 @@ static int run_first_command(char *infile, t_cmd *cmd_lst, char **envp)
 	}
 	pid = fork();
 	if (pid == 0)
-	{
-		close(pdes[0]);
-		dup2(fdin, STDIN_FILENO);
-		close(fdin);
-		dup2(pdes[1], STDOUT_FILENO);
-		close(pdes[1]);
-		execve((cmd_lst->cmd)[0], cmd_lst->cmd, envp);
-		perror("execve1 failed: command not found");
-		ft_lstfree(cmd_lst);
-		exit(127);
-	}
+		run_first_cmd_child(pdes, cmd_lst, fdin, envp);
 	else if (pid > 0)
-	{
-		close(pdes[1]);
-		close(fdin);
-		waitpid(pid, &execve_status, 0);
-		return (pdes[0]);
-	}
+		return (run_first_cmd_parent(pdes, fdin));
 	else
 	{
 		perror("Fork failed");
 		exit(1);
 	}
+	return (0);
 }
 
 static int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
@@ -63,17 +48,7 @@ static int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
 	pipe(pdes);
 	pid = fork();
 	if (pid == 0)
-	{
-		close(pdes[0]);
-		dup2(fdtmp, STDIN_FILENO);
-		close(fdtmp);
-		dup2(pdes[1], STDOUT_FILENO);
-		close(pdes[1]);
-		execve((cmd_lst->cmd)[0], cmd_lst->cmd, envp);
-		perror("execve2 failed: command not found");
-		ft_lstfree(cmd_lst);
-		exit(127);
-	}
+		run_next_cmd_child(pdes, cmd_lst, fdtmp, envp);
 	else if (pid > 0)
 	{
 		close(pdes[1]);
@@ -87,13 +62,11 @@ static int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
 		return (pdes[0]);
 	}
 	else
-	{
-		perror("Fork failed");
-		exit(1);
-	}
+		ft_perror_exit("Fork failed", 1);
+	return (0);
 }
 
-static void write_fdtmp_to_outfile(int fdtmp, int fdout, char *outfile)
+static void	write_fdtmp_to_outfile(int fdtmp, int fdout, char *outfile)
 {
 	if (fdout == -1)
 	{
@@ -106,9 +79,9 @@ static void write_fdtmp_to_outfile(int fdtmp, int fdout, char *outfile)
 	close(fdtmp);
 }
 
-static void write_infile_to_outfile(char *infile, int fdout, char *outfile)
+static void	write_infile_to_outfile(char *infile, int fdout, char *outfile)
 {
-	int fdin;
+	int	fdin;
 
 	fdin = open(infile, O_RDONLY);
 	if (fdin == -1)
@@ -121,8 +94,8 @@ static void write_infile_to_outfile(char *infile, int fdout, char *outfile)
 
 void	run_pipex(char *infile, char *outfile, t_cmd *cmd_lst, char **envp)
 {
-	int fdtmp;
-	int fdout;
+	int	fdtmp;
+	int	fdout;
 
 	fdout = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (cmd_lst == NULL)

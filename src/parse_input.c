@@ -6,20 +6,11 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:14 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/01 15:53:33 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/02 06:25:46 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-// void printtab(char **tab)
-// {
-// 	while (*tab != NULL)
-// 	{
-// 		ft_putendl_fd(*tab, 1);
-// 		tab++;
-// 	}
-// }
 
 static char	*extract_path_from_env(char **envp)
 {
@@ -67,7 +58,6 @@ static char	**format_cmd(char *fullcmd, char *path)
 	expanded_cmd = path_search(new_cmd[0], path);
 	free(new_cmd[0]);
 	new_cmd[0] = expanded_cmd;
-	//printtab(new_cmd);
 	return (new_cmd);
 }
 
@@ -96,7 +86,7 @@ t_cmd	*parse_input(int argc, char **argv, char **envp)
 		if (argv[i][0] == '\0')
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		append_lst(&cmd_lst, argv[i], path);
 		i++;

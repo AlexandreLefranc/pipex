@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/02/02 11:40:35 by alefranc         ###   ########.fr        #
+#    Updated: 2022/02/02 05:50:06 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCFILES = 	pipex.c \
 			check_input.c \
 			parse_input.c \
 			run_pipex.c \
+			run_pipex_utils.c \
 			pipex_utils.c
 SRC = $(addprefix $(SRCDIR), $(SRCFILES))
 OBJ = $(SRC:.c=.o)
