@@ -176,29 +176,56 @@ For each command, write in in temporary file and at each new command, treat this
 ```
 main:
 	check_input
-	parse_input
+	lst_cmd = parse_input
 
-	open infile  + check error
-	open outfile + check error
-	run_pipex
+	fdin  = open infile  + check error
+	fdout = open outfile + check error
+	run_pipex(lst_cmd, fdin, fdout, envp)
 ```
 
 ```
-run_cmd(cmd, fdin, fdout):
-	dup fdin in stdin
-	dup fdout in stdout
+run_cmd(cmd, f1, f2, envp):
+	dup2 f1 in stdin
+	dup2 f2 in stdout
 	execve cmd
 	perror and exit
 ```
 
 
 ```
-run_pipex (lst_cmd, fdin, fdout):
+run_pipex(lst_cmd, fdin, fdout, envp):
+	int f1
+	int f2
+	int pipe[2]
+	int flag
 
-	fork
-	child:
+	flag = 1
+	while there are cmd:						// lst_cmd != NULL
+		if first cmd:							// flag == 1
+			f1 = dup(fdin)
+			close fdin
+			flag = 0
+		else:
+			f1 = dup(pipe_read)
+			close pipe_read
 
-	parent:
+		pipe
+		if last cmd:							// cmd->next == NULL
+			f2 = dup(fdout)
+			close fdout
+			close pipe_write
+		else:
+			f2 = dup(pipe_write)
+			close pipe_write
+
+		fork
+		child:
+			run_cmd(cmd, f1, f2, envp)
+		parent:
+			close pipe_write
+			wait child
+
+
 ```
 
 # List of tests
