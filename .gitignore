@@ -9,6 +9,7 @@ rdonly
 wronly
 pipex-tester/
 PIPEXaminator/
+pipexMedic/
 
 # Prerequisites
 *.d

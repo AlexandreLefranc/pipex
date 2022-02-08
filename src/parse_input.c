@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:14 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/02 06:25:46 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/02 07:28:06 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,25 @@ static char	*path_search(char *cmd, char *path)
 	int		i;
 	char	*full_pathname;
 	char	**path_splitted;
+	char	*tab_cmd[3];
 
 	path_splitted = ft_split(path, ':');
 	i = 0;
 	while (path_splitted[i] != NULL)
 	{
-		full_pathname = ft_strjoin2(3, path_splitted[i], "/", cmd);
+		tab_cmd[0] = path_splitted[i];
+		tab_cmd[1] = cmd;
+		tab_cmd[2] = NULL;
+		full_pathname = ft_strtabjoin(tab_cmd, "/");
 		if (access(full_pathname, X_OK) == 0)
 		{
-			ft_strfreetab(path_splitted);
+			ft_strtabfree(path_splitted);
 			return (full_pathname);
 		}
 		free(full_pathname);
 		i++;
 	}
-	ft_strfreetab(path_splitted);
+	ft_strtabfree(path_splitted);
 	return (ft_strdup(cmd));
 }
 

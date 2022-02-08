@@ -171,6 +171,36 @@ OR
 
 For each command, write in in temporary file and at each new command, treat this temporary file as infile. And at the end, copy the content in outfile.
 
+# Pseudo-code v2
+
+```
+main:
+	check_input
+	parse_input
+
+	open infile  + check error
+	open outfile + check error
+	run_pipex
+```
+
+```
+run_cmd(cmd, fdin, fdout):
+	dup fdin in stdin
+	dup fdout in stdout
+	execve cmd
+	perror and exit
+```
+
+
+```
+run_pipex (lst_cmd, fdin, fdout):
+
+	fork
+	child:
+
+	parent:
+```
+
 # List of tests
 
 ## Normal use
