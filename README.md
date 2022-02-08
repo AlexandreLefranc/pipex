@@ -206,8 +206,13 @@ run_pipex(lst_cmd, fdin, fdout, envp):
 			close fdin
 			flag = 0
 		else:
+<<<<<<< HEAD
 			f1 = dup(f2)
 			close f2
+=======
+			f1 = dup(pipe_read)
+			close pipe_read
+>>>>>>> d581aa65de80bd423f58cc21257ccc56f5df3ec6
 
 		pipe
 		if last cmd:							// cmd->next == NULL
@@ -222,7 +227,11 @@ run_pipex(lst_cmd, fdin, fdout, envp):
 		child:
 			run_cmd(cmd, f1, f2, envp)
 		parent:
+<<<<<<< HEAD
 			close f1
+=======
+			close pipe_write
+>>>>>>> d581aa65de80bd423f58cc21257ccc56f5df3ec6
 			wait child
 
 
