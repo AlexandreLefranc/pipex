@@ -228,6 +228,89 @@ run_pipex(lst_cmd, fdin, fdout, envp):
 
 ```
 
+# Pseudo-code v3
+
+```
+Structure t_cmd:
+	{
+		char	**cmd
+		int		fdin
+		int		fdout
+		pid_t	pid
+	}
+
+Structure t_lst:
+	{
+		void	*content
+		t_lst	*next
+	}
+
+content = *t_cmd
+```
+
+
+```
+main:
+	check_input
+	lst = parse_input
+	redirect_infile_to_stdin
+	redirect_stdout_to_outfile
+	plug_pipes
+	run_pipex	
+```
+
+
+```
+redirect_infile_to_stdin:
+	fdin = open infile
+		protect
+	dup2(fdin, STDIN_FILENO)
+		protect
+	close(fdin)
+
+redirect_stdout_to_outfile:
+	fdout = open outfile
+		protect
+	dup2(fdout, STDOUT_FILENO)
+		protect
+	close(fdout)
+```
+
+
+```
+plug_pipes(lst):
+	int pdes[2]
+
+	lst->content->fdin = STDIN_FILENO
+	while (lst->next != NULL):
+		pipe(pdes)
+		lst->content->fdout = pdes[WRITE_END]
+		lst = lst->next
+		lst->content->fdin = pdes[READ_END]
+	lst->content->fdout = STDOUT_FILENO
+```
+
+
+```
+run_pipex:
+	fork_and_run_cmd(lst)
+	wait_children(lst)
+
+fork_and_run_cmd:
+	pid_t pid
+
+	while (lst != NULL):
+		pid = fork()
+		if (pid < 0)
+			error
+		else if (pid == 0)
+			dup2(lst->content->fdin, STDIN_FILENO)
+			dup2(lst->content->fdout, STDOUT_FILENO)
+			close(lst->)
+		lst->content->pid = pid
+		// Need to close WRITE_END
+```
+
 # List of tests
 
 ## Normal use
@@ -275,4 +358,9 @@ chmod 444 rdonly
 ```
 ./pipex Makefile "" "" out_mine
 < Makefile | > out_real
+```
+
+
+```
+
 ```
