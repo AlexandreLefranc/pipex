@@ -232,18 +232,20 @@ run_pipex(lst_cmd, fdin, fdout, envp):
 
 ```
 Structure t_cmd:
-	{
-		char	**cmd
-		int		fdin
-		int		fdout
-		pid_t	pid
-	}
+{
+	char	**cmd
+	int		fdin
+	int		fdout
+	int		fdin_write_end
+	int		fdout_read_end
+	pid_t	pid
+}
 
 Structure t_lst:
-	{
-		void	*content
-		t_lst	*next
-	}
+{
+	void	*content
+	t_lst	*next
+}
 
 content = *t_cmd
 ```
@@ -256,7 +258,7 @@ main:
 	redirect_infile_to_stdin
 	redirect_stdout_to_outfile
 	plug_pipes
-	run_pipex	
+	run_pipex
 ```
 
 
@@ -282,12 +284,16 @@ plug_pipes(lst):
 	int pdes[2]
 
 	lst->content->fdin = STDIN_FILENO
+	lst->content->fdin_write_end = -1
 	while (lst->next != NULL):
 		pipe(pdes)
 		lst->content->fdout = pdes[WRITE_END]
+		lst->content->fdout_read_end = pdes[READ_END]
 		lst = lst->next
 		lst->content->fdin = pdes[READ_END]
+		lst->content->fdin_write_end = pdes[WRITE_END]
 	lst->content->fdout = STDOUT_FILENO
+	lst->content->fdout_read_end = -1
 ```
 
 
@@ -306,7 +312,9 @@ fork_and_run_cmd:
 		else if (pid == 0)
 			dup2(lst->content->fdin, STDIN_FILENO)
 			dup2(lst->content->fdout, STDOUT_FILENO)
-			close(lst->)
+			close(lst->content->fdin)
+			close(lst->content->fdout)
+			close(lst->content->fd)
 		lst->content->pid = pid
 		// Need to close WRITE_END
 ```
@@ -327,6 +335,15 @@ echo "Hey\nje suis\nasdkl\n\n ds\n trer\n" > infile
 
 ./pipex infile "tr 'a' 'e'" "grep e" "wc -l" out_mine
 < infile tr 'a' 'e' | grep e | wc -l > out_real
+```
+
+```
+./pipex Makefile "cat /dev/urandom" "ls -l" out_mine
+< Makefile cat /dev/urandom | ls -l > out_real
+```
+
+```
+< Makefile
 ```
 
 ## Error use

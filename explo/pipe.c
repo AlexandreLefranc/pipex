@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_input.c                                      :+:      :+:    :+:   */
+/*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/17 17:22:29 by alefranc         ###   ########.fr       */
+/*   Created: 2022/02/14 16:03:05 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/14 16:06:54 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include <unistd.h>
+#include <stdio.h>
 
-char	**extract_paths(char **envp)
+int	main()
 {
-	char	*path;
-	char	**path_splitted;
+	int fdes[2];
 
-	
-	return (path_splitted)
-}
-
-t_list	parse_input(int argc, char **argv, char **envp)
-{
-	t_list	*lst;
-	char	**path;
-
-	lst = NULL;
-	paths = extract_paths(envp);
+	for (int i = 0; i < 3; i++)
+	{
+		pipe(fdes);
+		printf("fdes[0] = %d\n", fdes[0]);
+		printf("fdes[1] = %d\n", fdes[1]);
+		printf("\n");
+	}
 }

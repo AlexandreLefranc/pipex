@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/24 00:10:22 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/08 14:20:47 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/17 16:55:24 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ static int	run_next_command(int fdtmp, t_cmd *cmd_lst, char **envp)
 		close(pdes[1]);
 		close(fdtmp);
 		waitpid(pid, &execve_status, 0);
-		if (execve_status != 0)
+		if (WIFEXITED(execve_status) != 0)
 		{
 			ft_lstfree(cmd_lst);
-			exit(execve_status / 256);
+			WEXITSTATUS(execve_status);
 		}
 		return (pdes[0]);
 	}
