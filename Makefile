@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/02/21 16:19:06 by alefranc         ###   ########.fr        #
+#    Updated: 2022/02/21 18:56:41 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,10 @@ INC_FLAG = -Iinclude
 
 SRCDIR = src/
 SRCFILES =	main.c \
+			check_input.c \
+			parse_input.c \
 			redirection.c \
-			utils.c
+			utils_libft.c
 # SRCFILES = 	pipex.c \
 # 			check_input.c \
 # 			parse_input.c \
