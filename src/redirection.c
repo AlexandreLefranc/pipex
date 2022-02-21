@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 16:52:03 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/17 17:03:02 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/21 16:15:29 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void	redirect_infile_to_stdin(char *infile)
 {
+	int	fdin;
+
+	dprintf(2, "%s\n", infile);
 	fdin = open(infile, O_RDONLY);
 	if (fdin == -1)
 		perror(infile);
@@ -27,6 +30,9 @@ void	redirect_infile_to_stdin(char *infile)
 
 void	redirect_outfile_to_stdout(char *outfile)
 {
+	int	fdout;
+
+	dprintf(2, "%s\n", outfile);
 	fdout = open(outfile, O_WRONLY | O_CREAT | O_TRUNC);
 	if (fdout == -1)
 		perror(outfile);
