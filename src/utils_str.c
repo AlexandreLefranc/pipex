@@ -1,26 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_libft.c                                      :+:      :+:    :+:   */
+/*   utils_str.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/17 16:59:18 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/21 19:16:09 by alefranc         ###   ########.fr       */
+/*   Created: 2022/02/23 16:07:10 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/23 17:38:20 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	ft_putendl_fd(char *str, int fd)
+size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
 	i = 0;
-	while (str[i] != '\0')
+	while (s[i] != '\0')
 		i++;
-	write(fd, str, i);
-	write(fd, "\n", 1);
+	return (i);
+}
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
+{
+	size_t	j;
+	size_t	dst_len;
+	size_t	src_len;
+
+	dst_len = ft_strlen(dest);
+	src_len = ft_strlen(src);
+	j = size;
+	while (*dest != '\0')
+	{
+		dest++;
+		if (j > 0)
+			j--;
+	}
+	while (*src != '\0' && j > 1)
+	{
+		*dest++ = *src++;
+		j--;
+	}
+	*dest = '\0';
+	if (size > dst_len)
+		return (dst_len + src_len);
+	return (size + src_len);
 }
 
 char	*ft_strchr(char *str, char c)
@@ -50,8 +75,20 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-void	ft_perror_exit(char *msg, int error_number)
+char	*ft_strdup(const char *s)
 {
-	perror(msg);
-	exit(error_number);
+	char	*dup;
+	size_t	i;
+
+	dup = (char *)malloc(sizeof(*dup) * (ft_strlen(s) + 1));
+	if (dup == NULL)
+		return (NULL);
+	i = 0;
+	while (s[i] != '\0')
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }

@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/02/21 18:56:41 by alefranc         ###   ########.fr        #
+#    Updated: 2022/02/23 16:25:07 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,11 @@ SRCFILES =	main.c \
 			check_input.c \
 			parse_input.c \
 			redirection.c \
-			utils_libft.c
+			utils_io.c \
+			utils_lst.c \
+			utils_split.c \
+			utils_str.c \
+			utils_strtab.c
 # SRCFILES = 	pipex.c \
 # 			check_input.c \
 # 			parse_input.c \

@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/21 19:42:23 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/23 18:31:57 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,67 @@ static char *get_path(char **envp)
 	while (*envp != NULL)
 	{
 		if (ft_strncmp(*envp, "PATH=", 5) == 0)
-			return (*envp);
+			return (*envp + 5);
 		envp++;
 	}
 	ft_putendl_fd("No PATH found in environment!", 2);
 	return (NULL);
 }
 
+static char	*path_search(char *cmd, char *path)
+{
+	int		i;
+	char	*full_pathname;
+	char	**path_splitted;
+	char	*tab_cmd[3];
+
+	path_splitted = ft_split(path, ':');
+	i = 0;
+	while (path_splitted[i] != NULL)
+	{
+		tab_cmd[0] = path_splitted[i];
+		tab_cmd[1] = cmd;
+		tab_cmd[2] = NULL;
+		full_pathname = ft_strtabjoin(tab_cmd, "/");
+		if (access(full_pathname, X_OK) == 0)
+		{
+			ft_strtabfree(path_splitted);
+			return (full_pathname);
+		}
+		free(full_pathname);
+		i++;
+	}
+	ft_strtabfree(path_splitted);
+	return (ft_strdup(cmd));
+}
+
+static char	**get_cmd(char *fullcmd, char *path)
+{
+	char	**cmd;
+
+	cmd = ft_split(fullcmd, ' ');
+	if (cmd == NULL)
+		ft_perror_exit("ft_split() failed", 1);
+	if (ft_strchr(cmd[0], '/'))
+		return (cmd);
+	cmd[0] = path_search(cmd[0], path);
+	return (cmd);
+}
+
 static void	append_lst(t_list **lst, char *fullcmd, char *path)
 {
-	dprintf(2, "%s\n", fullcmd);
-	dprintf(2, "%s\n", path);
 	t_cmd	*new_cmd;
 
 	new_cmd = malloc(sizeof(*new_cmd) * 1);
 	if (new_cmd == NULL)
-		return (NULL);
-	new_cmd->cmd = NULL;
+		ft_perror_exit("malloc() failed", 1);
+	new_cmd->cmd = get_cmd(fullcmd, path);
 	new_cmd->fdin = -1;
 	new_cmd->fdout = -1;
 	new_cmd->fdin_write_end = -1;
 	new_cmd->fdout_read_end = -1;
 	new_cmd->pid = -1;
-	//ft_lstadd_back(lst, new_node);
-	(void)lst;
-	(void)fullcmd;
-	(void)path;
+	ft_lstadd_back(lst, ft_lstnew(new_cmd));
 }
 
 t_list	*parse_input(int argc, char **argv, char **envp)
@@ -58,6 +93,11 @@ t_list	*parse_input(int argc, char **argv, char **envp)
 	{
 		append_lst(&lst, argv[i], path);
 		i++;
+	}
+	while (lst != NULL)
+	{
+		printf("%s\n", (((t_cmd *)lst->content)->cmd)[0]);
+		lst = lst->next;
 	}
 	return (NULL);
 }
