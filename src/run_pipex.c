@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 17:31:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/24 17:46:40 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/24 18:01:15 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,20 @@ void	fork_and_run_cmd(t_list *lst, char **envp)
 	}
 }
 
-void	run_pipex(t_list *lst)
+void	wait_children(t_list *lst)
 {
-	fork_and_run_cmd(lst);
+	t_cmd	*content;
+
+	while (lst != NULL)
+	{
+		content = lst->content;
+		wait_children(content->pid)
+		lst = lst->next;
+	}
+}
+
+void	run_pipex(t_list *lst, char **envp)
+{
+	fork_and_run_cmd(lst, envp);
 	wait_children(lst);
 }
