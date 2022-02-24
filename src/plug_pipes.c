@@ -1,42 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_lst.c                                        :+:      :+:    :+:   */
+/*   plug_pipes.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/24 17:28:10 by alefranc         ###   ########.fr       */
+/*   Created: 2022/02/24 15:59:12 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/24 16:57:15 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_list	*ft_lstnew(void *content)
+void	plug_pipes(t_list *lst)
 {
-	t_list	*node;
+	int	pdes[2];
+	t_cmd *content;
 
-	node = ft_calloc(1, sizeof(*node));
-	if (node == NULL)
-		return (NULL);
-	node->content = content;
-	node->next = NULL;
-	return (node);
-}
-
-void	ft_lstadd_back(t_list **alst, t_list *new)
-{
-	t_list	*lst;
-
-	if (new == NULL)
-		return ;
-	if (alst == NULL || *alst == NULL)
-	{
-		*alst = new;
-		return ;
-	}
-	lst = *alst;
+	content = lst->content;
+	content->fdin = STDIN_FILENO;
+	content->fdin_write_end = -1;
 	while (lst->next != NULL)
+	{
+		pipe(pdes);
+		content->fdout = pdes[WRITE_END];
+		content->fdout_read_end = pdes[READ_END];
 		lst = lst->next;
-	lst->next = new;
+		content = lst->content;
+		content->fdin = pdes[READ_END];
+		content->fdin_write_end = pdes[WRITE_END];
+	}
+	content->fdout = STDOUT_FILENO;
+	content->fdout_read_end = -1;
 }

@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/23 18:31:57 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/24 16:08:13 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,5 @@ t_list	*parse_input(int argc, char **argv, char **envp)
 		append_lst(&lst, argv[i], path);
 		i++;
 	}
-	while (lst != NULL)
-	{
-		printf("%s\n", (((t_cmd *)lst->content)->cmd)[0]);
-		lst = lst->next;
-	}
-	return (NULL);
+	return (lst);
 }

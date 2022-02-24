@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/02/23 16:25:07 by alefranc         ###   ########.fr        #
+#    Updated: 2022/02/24 16:58:58 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ SRCDIR = src/
 SRCFILES =	main.c \
 			check_input.c \
 			parse_input.c \
+			plug_pipes.c \
 			redirection.c \
+			utils_calloc.c \
 			utils_io.c \
 			utils_lst.c \
 			utils_split.c \

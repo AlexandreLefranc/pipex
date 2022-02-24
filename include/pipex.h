@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/23 18:25:25 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/24 17:03:47 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 # include <errno.h>
 
 # include <string.h>
+
+// Macros
+# define WRITE_END 1
+# define READ_END 0
 
 // User-defined types
 typedef struct s_cmd
@@ -46,6 +50,10 @@ void	check_input(int argc, char **argv);
 t_list	*parse_input(int argc, char **argv, char **envp);
 void	redirect_infile_to_stdin(char *infile);
 void	redirect_outfile_to_stdout(char *outfile);
+void	plug_pipes(t_list *lst);
+
+// utils_calloc
+void	*ft_calloc(size_t nmemb, size_t size);
 
 // utils_io
 void	ft_putendl_fd(char *str, int fd);
@@ -71,5 +79,6 @@ void	ft_strtabfree(char **tab);
 size_t	ft_strtablen(char **tab);
 char	*ft_strtabjoin(char **tab, char *sep);
 size_t	ft_strtabsize(char **tab);
+void	ft_strtabprint_fd(char **tab, int fd);
 
 #endif

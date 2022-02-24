@@ -1,42 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_lst.c                                        :+:      :+:    :+:   */
+/*   utils_calloc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/24 17:28:10 by alefranc         ###   ########.fr       */
+/*   Created: 2022/02/24 16:21:26 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/24 16:22:28 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-t_list	*ft_lstnew(void *content)
+static void	*ft_memset(void *s, int c, size_t n)
 {
-	t_list	*node;
+	size_t	i;
+	char	*s2;
 
-	node = ft_calloc(1, sizeof(*node));
-	if (node == NULL)
-		return (NULL);
-	node->content = content;
-	node->next = NULL;
-	return (node);
+	s2 = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		s2[i] = c;
+		i++;
+	}
+	return (s);
 }
 
-void	ft_lstadd_back(t_list **alst, t_list *new)
+static void	ft_bzero(void *s, size_t n)
 {
-	t_list	*lst;
+	ft_memset(s, 0, n);
+}
 
-	if (new == NULL)
-		return ;
-	if (alst == NULL || *alst == NULL)
-	{
-		*alst = new;
-		return ;
-	}
-	lst = *alst;
-	while (lst->next != NULL)
-		lst = lst->next;
-	lst->next = new;
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	if (nmemb * size > 2147483647)
+		return (NULL);
+	ptr = (void *)malloc(nmemb * size);
+	if (ptr == NULL)
+		return (NULL);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
 }

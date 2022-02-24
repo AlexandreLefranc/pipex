@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 12:41:42 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/23 16:45:49 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/02/24 16:24:27 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ static char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (s == NULL)
 		return (NULL);
 	if (start > ft_strlen(s))
-		sub = malloc(1 * sizeof(*sub));
+		sub = ft_calloc(1, sizeof(*sub));
 	else if (len > ft_strlen(s) - start)
-		sub = malloc((ft_strlen(s) - start + 1) * sizeof(*sub));
+		sub = ft_calloc(ft_strlen(s) - start + 1, sizeof(*sub));
 	else
-		sub = malloc((len + 1) * sizeof(*sub));
+		sub = ft_calloc(len + 1, sizeof(*sub));
 	if (sub == NULL)
 		return (NULL);
 	i = 0;
@@ -114,7 +114,7 @@ char	**ft_split(char const *s, char c)
 	if (s == NULL)
 		return (NULL);
 	number_of_words = countwords(s, c);
-	tab = (char **)malloc((number_of_words + 1) * sizeof(char *));
+	tab = (char **)ft_calloc(number_of_words + 1, sizeof(char *));
 	if (tab == NULL)
 		return (NULL);
 	r = fill_tab(tab, s, c);
