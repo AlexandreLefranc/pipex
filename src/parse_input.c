@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/24 16:08:13 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:25:28 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char *get_path(char **envp)
 		envp++;
 	}
 	ft_putendl_fd("No PATH found in environment!", 2);
-	return (NULL);
+	exit(1);
 }
 
 static char	*path_search(char *cmd, char *path)

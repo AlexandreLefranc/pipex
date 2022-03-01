@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/02/24 17:03:47 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/01 15:31:44 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_list	*parse_input(int argc, char **argv, char **envp);
 void	redirect_infile_to_stdin(char *infile);
 void	redirect_outfile_to_stdout(char *outfile);
 void	plug_pipes(t_list *lst);
+void	run_pipex(t_list *lst, char **envp);
 
 // utils_calloc
 void	*ft_calloc(size_t nmemb, size_t size);

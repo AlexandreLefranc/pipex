@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/02/24 16:58:58 by alefranc         ###   ########.fr        #
+#    Updated: 2022/03/01 15:31:20 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,18 +22,13 @@ SRCFILES =	main.c \
 			parse_input.c \
 			plug_pipes.c \
 			redirection.c \
+			run_pipex.c \
 			utils_calloc.c \
 			utils_io.c \
 			utils_lst.c \
 			utils_split.c \
 			utils_str.c \
 			utils_strtab.c
-# SRCFILES = 	pipex.c \
-# 			check_input.c \
-# 			parse_input.c \
-# 			run_pipex.c \
-# 			run_pipex_utils.c \
-# 			pipex_utils.c
 SRC = $(addprefix $(SRCDIR), $(SRCFILES))
 OBJ = $(SRC:.c=.o)
 
