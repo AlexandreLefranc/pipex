@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/01 15:31:44 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:35:56 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	check_input(int argc, char **argv);
 t_list	*parse_input(int argc, char **argv, char **envp);
 void	redirect_infile_to_stdin(char *infile);
 void	redirect_outfile_to_stdout(char *outfile);
-void	plug_pipes(t_list *lst);
+void	plug_pipes(t_list *lst, int fdin, int fdout);
 void	run_pipex(t_list *lst, char **envp);
 
 // utils_calloc
@@ -60,10 +60,12 @@ void	*ft_calloc(size_t nmemb, size_t size);
 void	ft_putendl_fd(char *str, int fd);
 void	ft_perror_exit(char *msg, int error_number);
 void	ft_strtabprint_fd(char **tab, int fd);
+void	ft_printfd_fd(int fd_to_read, int fd);
 
 // utils_lst
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_back(t_list **alst, t_list *new);
+void	ft_printlst_fd(t_list *lst, int fd);
 
 // utils_split
 char	**ft_split(char const *s, char c);

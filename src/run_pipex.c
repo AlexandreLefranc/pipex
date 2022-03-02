@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 17:31:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/01 16:22:14 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/02 16:15:50 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,21 @@ void	fork_and_run_cmd(t_list *lst, char **envp)
 			ft_perror_exit("fork() failed", 1);
 		else if (pid == 0)
 		{
-			dprintf(2, "dup2 %d in %d\n", content->fdin, STDIN_FILENO);
-			if (content->fdin != STDIN_FILENO)
-				dup2(content->fdin, STDIN_FILENO);
-			if (content->fdout != STDOUT_FILENO)
-				dup2(content->fdout, STDOUT_FILENO);
-			// close(content->fdin);
-			// close(content->fdout);
-			// close(content->fdin_write_end);
-			// close(content->fdout_read_end);
-			dprintf(2, "execve of %s.\n", content->cmd[0]);
-			exit(0);
-			//execve(content->cmd[0], content->cmd, envp);
-			(void)envp;
+			// dprintf(2, "dup2 %d in %d\n", content->fdin, STDIN_FILENO);
+			// ft_printfd_fd(content->fdin, 2);
+			if (content->fdin_write_end != -1)
+				close(content->fdin_write_end);
+			dup2(content->fdin, STDIN_FILENO);
+			close(content->fdin);
+
+			if (content->fdout_read_end != -1)
+				close(content->fdout_read_end);
+			dup2(content->fdout, STDOUT_FILENO);
+			close(content->fdout);
+
+			execve(content->cmd[0], content->cmd, envp);
+			// dprintf(2, "execve of %s.\n", content->cmd[0]);
+			// exit(0);
 		}
 		content->pid = pid;
 		lst = lst->next;
@@ -47,13 +49,17 @@ void	fork_and_run_cmd(t_list *lst, char **envp)
 void	wait_children(t_list *lst)
 {
 	t_cmd	*content;
-	int		status;
+	// int		status;
 
 	while (lst != NULL)
 	{
 		content = lst->content;
-		dprintf(2, "pid=%d\n", content->pid);
-		waitpid(content->pid, &status, 0);
+		close(content->fdin);
+		close(content->fdout);
+		dprintf(2, "waiting pid=%d\n", content->pid);
+		// waitpid(content->pid, &status, 0);
+		wait(NULL);
+		dprintf(2, "after waiting pid=%d\n", content->pid);
 		lst = lst->next;
 	}
 }

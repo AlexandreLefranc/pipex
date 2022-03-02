@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 16:45:37 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/01 15:28:56 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/02 15:37:29 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,21 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_list	*lst;
+	int		fdin;
+	int		fdout;
 
 	check_input(argc, argv);
 	lst = parse_input(argc, argv, envp);
-	redirect_infile_to_stdin(argv[1]);
-	redirect_outfile_to_stdout(argv[argc - 1]);
-	plug_pipes(lst);
 
-	// t_cmd *content;
-	// while (lst != NULL)
-	// {
-	// 	content = lst->content;
-	// 	ft_strtabprint_fd(content->cmd, 2);
-	// 	dprintf(2, "content->fdin=%d\n", content->fdin);
-	// 	dprintf(2, "content->fdin_write_end=%d\n", content->fdin_write_end);
-	// 	dprintf(2, "content->fdout=%d\n", content->fdout);
-	// 	dprintf(2, "content->fdout_read_end=%d\n", content->fdout_read_end);
-	// 	dprintf(2, "content->pid=%d\n", content->pid);
-	// 	dprintf(2, "\n");
-	// 	lst = lst->next;
-	// }
+	fdin = open(argv[1], O_RDONLY);
+	if (fdin == -1)
+		perror(argv[1]);
+	fdout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fdout == -1)
+		perror(argv[argc - 1]);
+
+	plug_pipes(lst, fdin, fdout);
+
+	// ft_printlst_fd(lst, 2);
 	run_pipex(lst, envp);
 }
