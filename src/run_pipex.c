@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 17:31:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/02 16:15:50 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/02 16:20:53 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void	wait_children(t_list *lst)
 		content = lst->content;
 		close(content->fdin);
 		close(content->fdout);
-		dprintf(2, "waiting pid=%d\n", content->pid);
+		// dprintf(2, "waiting pid=%d\n", content->pid);
 		// waitpid(content->pid, &status, 0);
 		wait(NULL);
-		dprintf(2, "after waiting pid=%d\n", content->pid);
+		// dprintf(2, "after waiting pid=%d\n", content->pid);
 		lst = lst->next;
 	}
 }
