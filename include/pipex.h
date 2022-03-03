@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/03 16:54:00 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/03 17:38:01 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,9 @@ void	ft_printfd_fd(int fd_to_read, int fd);
 // utils_lst
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_back(t_list **alst, t_list *new);
-t_list	*ft_lstreverse(t_list *lst);
 void	ft_printlst_fd(t_list *lst, int fd);
+t_list	*ft_lstfreenext(t_list *lst);
+void	ft_lstfree(t_list *lst);
 
 // utils_split
 char	**ft_split(char const *s, char c);

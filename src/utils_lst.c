@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/03 16:35:31 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/03 17:39:12 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,25 +41,40 @@ void	ft_lstadd_back(t_list **alst, t_list *new)
 	lst->next = new;
 }
 
-t_list	*ft_lstreverse(t_list *lst)
-{
-	t_list	*lst_current;
-	t_list	*lst_next;
-	t_list	*lst_tmp;
+// t_list	*ft_lstreverse(t_list *lst)
+// {
+// 	t_list	*lst_current;
+// 	t_list	*lst_next;
+// 	t_list	*lst_tmp;
+//
+// 	if (lst == NULL)
+// 		return (lst);
+// 	lst_tmp = NULL;
+// 	lst_current = lst;
+// 	while (lst_current != NULL)
+// 	{
+// 		lst_next = lst_current->next;
+// 		lst_current->next = lst_tmp;
+// 		lst_tmp = lst_current;
+// 		lst_current = lst_next;
+// 	}
+// 	return (lst_tmp);
+// }
 
-	if (lst == NULL)
-		return (lst);
-	lst_tmp = NULL;
-	lst_current = lst;
-	while (lst_current != NULL)
-	{
-		lst_next = lst_current->next;
-		lst_current->next = lst_tmp;
-		lst_tmp = lst_current;
-		lst_current = lst_next;
-	}
-	return (lst_tmp);
-}
+// void	ft_freelst(t_list *lst)
+// {
+// 	t_cmd	*content;
+// 	t_list	*lst_tmp;
+//
+// 	while (lst != NULL)
+// 	{
+// 		lst_tmp = lst;
+// 		content = lst->content;
+// 		ft_strtabfree(content->cmd);
+// 		lst = lst->next;
+// 		free(lst_tmp);
+// 	}
+// }
 
 void	ft_printlst_fd(t_list *lst, int fd)
 {
@@ -77,4 +92,23 @@ void	ft_printlst_fd(t_list *lst, int fd)
 		dprintf(fd, "\n");
 		lst = lst->next;
 	}
+}
+
+t_list	*ft_lstfreenext(t_list *lst)
+{
+	t_list	*old;
+	t_cmd	*content;
+
+	content = lst->content;
+	old = lst;
+	lst = lst->next;
+	ft_strtabfree(content->cmd);
+	free(old);
+	return (lst);
+}
+
+void	ft_lstfree(t_list *lst)
+{
+	while (lst != NULL)
+		lst = ft_lstfreenext(lst);
 }
