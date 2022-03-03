@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/01 15:25:28 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/03 14:45:40 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ static char	**get_cmd(char *fullcmd, char *path)
 	char	**cmd;
 
 	cmd = ft_split(fullcmd, ' ');
+	if (cmd[0] == NULL)
+		return (cmd);
 	if (cmd == NULL)
 		ft_perror_exit("ft_split() failed", 1);
 	if (ft_strchr(cmd[0], '/'))

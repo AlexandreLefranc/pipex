@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:10:04 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/02 15:35:08 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/03 12:26:07 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ void	ft_putendl_fd(char *str, int fd)
 		i++;
 	write(fd, str, i);
 	write(fd, "\n", 1);
+}
+
+void	ft_putstr_fd(char *str, int fd)
+{
+	write(fd, str, ft_strlen(str));
 }
 
 void	ft_perror_exit(char *msg, int error_number)

@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/02 15:35:56 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/03 16:54:00 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	*ft_calloc(size_t nmemb, size_t size);
 
 // utils_io
 void	ft_putendl_fd(char *str, int fd);
+void	ft_putstr_fd(char *str, int fd);
 void	ft_perror_exit(char *msg, int error_number);
 void	ft_strtabprint_fd(char **tab, int fd);
 void	ft_printfd_fd(int fd_to_read, int fd);
@@ -65,6 +66,7 @@ void	ft_printfd_fd(int fd_to_read, int fd);
 // utils_lst
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_back(t_list **alst, t_list *new);
+t_list	*ft_lstreverse(t_list *lst);
 void	ft_printlst_fd(t_list *lst, int fd);
 
 // utils_split
@@ -83,5 +85,9 @@ size_t	ft_strtablen(char **tab);
 char	*ft_strtabjoin(char **tab, char *sep);
 size_t	ft_strtabsize(char **tab);
 void	ft_strtabprint_fd(char **tab, int fd);
+
+// utils_wrap
+void	ft_close(int fd);
+void	ft_dup2(int fd1, int fd2);
 
 #endif

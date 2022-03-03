@@ -379,5 +379,6 @@ chmod 444 rdonly
 
 
 ```
-
+./pipex "" ""
+< Makefile | ls > out_real
 ```

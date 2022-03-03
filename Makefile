@@ -6,7 +6,7 @@
 #    By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/24 01:37:09 by alefranc          #+#    #+#              #
-#    Updated: 2022/03/01 15:31:20 by alefranc         ###   ########.fr        #
+#    Updated: 2022/03/03 16:54:44 by alefranc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRCFILES =	main.c \
 			utils_lst.c \
 			utils_split.c \
 			utils_str.c \
-			utils_strtab.c
+			utils_strtab.c \
+			utils_wrap.c
 SRC = $(addprefix $(SRCDIR), $(SRCFILES))
 OBJ = $(SRC:.c=.o)
 
