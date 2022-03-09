@@ -1,0 +1,895 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_input.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/17 17:04:22 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/21 18:35:27 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	check_input(int argc, char **argv)
+{
+	(void)argv;
+	if (argc < 5)
+	{
+		ft_putendl_fd("Usage:", 2);
+		ft_putendl_fd("    ./pipex file1 cmd1 cmd2 cmd3 ... cmdn file2", 2);
+		ft_putendl_fd("Example:", 2);
+		ft_putendl_fd("    ./pipex Makefile \"ls -l\" \"wc -l\" out.txt", 2);
+		exit(1);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/17 16:45:37 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/09 15:33:39 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_list	*lst;
+	int		fdin;
+	int		fdout;
+
+	check_input(argc, argv);
+	lst = parse_input(argc, argv, envp);
+	fdout = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fdout == -1)
+	{
+		ft_lstfree(lst);
+		ft_perror_exit(argv[argc - 1], 1);
+	}
+	fdin = open(argv[1], O_RDONLY);
+	if (fdin == -1)
+	{
+		ft_lstfree(lst);
+		ft_perror_exit(argv[1], 1);
+	}
+	plug_pipes(lst, fdin, fdout);
+	run_pipex(lst, envp);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_input.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/09 15:48:40 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+static char *get_path(char **envp)
+{
+	while (*envp != NULL)
+	{
+		if (ft_strncmp(*envp, "PATH=", 5) == 0)
+			return (*envp + 5);
+		envp++;
+	}
+	ft_putendl_fd("No PATH found in environment!", 2);
+	exit(1);
+}
+
+static char	*path_search(char *cmd, char *path)
+{
+	int		i;
+	char	*full_pathname;
+	char	**path_splitted;
+	char	*tab_cmd[3];
+
+	path_splitted = ft_split(path, ':');
+	i = 0;
+	while (path_splitted[i] != NULL)
+	{
+		tab_cmd[0] = path_splitted[i];
+		tab_cmd[1] = cmd;
+		tab_cmd[2] = NULL;
+		full_pathname = ft_strtabjoin(tab_cmd, "/");
+		if (access(full_pathname, X_OK) == 0)
+		{
+			ft_strtabfree(path_splitted);
+			return (full_pathname);
+		}
+		free(full_pathname);
+		i++;
+	}
+	ft_strtabfree(path_splitted);
+	return (ft_strdup(cmd));
+}
+
+static char	**get_cmd(char *fullcmd, char *path)
+{
+	char	**cmd;
+
+	cmd = ft_split(fullcmd, ' ');
+	if (cmd[0] == NULL)
+		return (cmd);
+	if (cmd == NULL)
+		ft_perror_exit("ft_split() failed", 1);
+	if (ft_strchr(cmd[0], '/'))
+		return (cmd);
+	cmd[0] = path_search(cmd[0], path);
+	return (cmd);
+}
+
+static void	append_lst(t_list **lst, char *fullcmd, char *path)
+{
+	t_cmd	*new_cmd;
+
+	new_cmd = ft_calloc_debug(sizeof(*new_cmd), 1, "new_cmd");
+	if (new_cmd == NULL)
+		ft_perror_exit("malloc() failed", 1);
+	new_cmd->cmd = get_cmd(fullcmd, path);
+	new_cmd->fdin = -1;
+	new_cmd->fdout = -1;
+	new_cmd->fdin_write_end = -1;
+	new_cmd->fdout_read_end = -1;
+	new_cmd->pid = -1;
+	ft_lstadd_back(lst, ft_lstnew(new_cmd));
+}
+
+t_list	*parse_input(int argc, char **argv, char **envp)
+{
+	int		i;
+	char	*path;
+	t_list	*lst;
+
+	path = get_path(envp);
+	i = 2;
+	lst = NULL;
+	while (i < argc - 1)
+	{
+		append_lst(&lst, argv[i], path);
+		i++;
+	}
+	return (lst);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   plug_pipes.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/24 15:59:12 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/03 18:05:37 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	plug_pipes(t_list *lst, int fdin, int fdout)
+{
+	int		pdes[2];
+	t_cmd	*content;
+	t_list	*lst_save;
+
+	lst_save = lst;
+	content = lst->content;
+	content->fdin = fdin;
+	content->fdin_write_end = -1;
+	while (lst->next != NULL)
+	{
+		if (pipe(pdes) == -1)
+		{
+			ft_lstfree(lst_save);
+			ft_perror_exit("pipe() failed", 1);
+		}
+		content->fdout = pdes[WRITE_END];
+		content->fdout_read_end = pdes[READ_END];
+		lst = lst->next;
+		content = lst->content;
+		content->fdin = pdes[READ_END];
+		content->fdin_write_end = pdes[WRITE_END];
+	}
+	content->fdout = fdout;
+	content->fdout_read_end = -1;
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/17 16:52:03 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/24 16:04:17 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	redirect_infile_to_stdin(char *infile)
+{
+	int	fdin;
+
+	fdin = open(infile, O_RDONLY);
+	if (fdin == -1)
+		perror(infile);
+	else
+	{
+		if (dup2(fdin, STDIN_FILENO) == -1)
+			ft_perror_exit("dup2 failed", 1);
+		close(fdin);
+	}
+}
+
+void	redirect_outfile_to_stdout(char *outfile)
+{
+	int	fdout;
+
+	fdout = open(outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fdout == -1)
+		perror(outfile);
+	else
+	{
+		if (dup2(fdout, STDIN_FILENO) == -1)
+			ft_perror_exit("dup2 failed", 1);
+		close(fdout);
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_pipex.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/24 17:31:40 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/03 18:01:24 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+static void	child(t_cmd *content, char **envp, t_list *lst_save)
+{
+	ft_dup2(content->fdin, STDIN_FILENO);
+	ft_close(content->fdin);
+	ft_close(content->fdout_read_end);
+	ft_dup2(content->fdout, STDOUT_FILENO);
+	ft_close(content->fdout);
+	execve(content->cmd[0], content->cmd, envp);
+	ft_putstr_fd(content->cmd[0], 2);
+	ft_putendl_fd(": command not found", 2);
+	ft_lstfree(lst_save);
+	exit(127);
+}
+
+static void	fork_and_run_cmd(t_list *lst, char **envp)
+{
+	pid_t	pid;
+	t_cmd	*content;
+	t_list	*lst_save;
+
+	lst_save = lst;
+	while (lst != NULL)
+	{
+		content = lst->content;
+		pid = fork();
+		if (pid < 0)
+			ft_perror_exit("fork() failed", 1);
+		else if (pid == 0)
+			child(content, envp, lst_save);
+		ft_close(content->fdin);
+		ft_close(content->fdout);
+		content->pid = pid;
+		lst = lst->next;
+	}
+}
+
+static void	wait_children(t_list *lst)
+{
+	t_cmd	*content;
+	int		status;
+
+	while (lst != NULL)
+	{
+		content = lst->content;
+		waitpid(content->pid, &status, 0);
+		lst = ft_lstfreenext(lst);
+		if (lst == NULL)
+			exit(WEXITSTATUS(status));
+	}
+}
+
+void	run_pipex(t_list *lst, char **envp)
+{
+	fork_and_run_cmd(lst, envp);
+	wait_children(lst);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_calloc.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/24 16:21:26 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/09 16:38:59 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+static void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*s2;
+
+	s2 = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		s2[i] = c;
+		i++;
+	}
+	return (s);
+}
+
+static void	ft_bzero(void *s, size_t n)
+{
+	ft_memset(s, 0, n);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+
+	if (nmemb * size > 2147483647)
+		return (NULL);
+	ptr = (void *)malloc(nmemb * size);
+	if (ptr == NULL)
+		return (NULL);
+	DEBUG_PRINT("malloc(): %p\n", ptr);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
+}
+
+void	*ft_calloc_debug(size_t nmemb, size_t size, char *msg)
+{
+	void	*ptr;
+
+	if (nmemb * size > 2147483647)
+		return (NULL);
+	ptr = (void *)malloc(nmemb * size);
+	dprintf(2, "malloc	%p: %s\n", ptr, msg);
+	if (ptr == NULL)
+		return (NULL);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
+}
+
+void	ft_free_debug(void *ptr, char *msg)
+{
+	dprintf(2, "free	%p: %s\n", ptr, msg);
+	free(ptr);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_io.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/23 16:10:04 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/03 12:26:07 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	ft_putendl_fd(char *str, int fd)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	write(fd, str, i);
+	write(fd, "\n", 1);
+}
+
+void	ft_putstr_fd(char *str, int fd)
+{
+	write(fd, str, ft_strlen(str));
+}
+
+void	ft_perror_exit(char *msg, int error_number)
+{
+	perror(msg);
+	exit(error_number);
+}
+
+void	ft_printfd_fd(int fd_to_read, int fd)
+{
+	int		fddup;
+	char	buf[1024];
+	ssize_t	ret;
+
+	fddup = dup(fd_to_read);
+	ret = read(fddup, buf, 1023);
+	buf[ret] = '\0';
+	while (ret != 0)
+	{
+		ft_putendl_fd(buf, fd);
+		ret = read(fddup, buf, 1023);
+		buf[ret] = '\0';
+	}
+	close(fddup);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_lst.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/09 16:37:28 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+t_list	*ft_lstnew(void *content)
+{
+	t_list	*node;
+
+	node = ft_calloc_debug(1, sizeof(*node), "node in lstnew");
+	if (node == NULL)
+		return (NULL);
+	node->content = content;
+	node->next = NULL;
+	return (node);
+}
+
+void	ft_lstadd_back(t_list **alst, t_list *new)
+{
+	t_list	*lst;
+
+	if (new == NULL)
+		return ;
+	if (alst == NULL || *alst == NULL)
+	{
+		*alst = new;
+		return ;
+	}
+	lst = *alst;
+	while (lst->next != NULL)
+		lst = lst->next;
+	lst->next = new;
+}
+
+// t_list	*ft_lstreverse(t_list *lst)
+// {
+// 	t_list	*lst_current;
+// 	t_list	*lst_next;
+// 	t_list	*lst_tmp;
+//
+// 	if (lst == NULL)
+// 		return (lst);
+// 	lst_tmp = NULL;
+// 	lst_current = lst;
+// 	while (lst_current != NULL)
+// 	{
+// 		lst_next = lst_current->next;
+// 		lst_current->next = lst_tmp;
+// 		lst_tmp = lst_current;
+// 		lst_current = lst_next;
+// 	}
+// 	return (lst_tmp);
+// }
+
+// void	ft_freelst(t_list *lst)
+// {
+// 	t_cmd	*content;
+// 	t_list	*lst_tmp;
+//
+// 	while (lst != NULL)
+// 	{
+// 		lst_tmp = lst;
+// 		content = lst->content;
+// 		ft_strtabfree(content->cmd);
+// 		lst = lst->next;
+// 		free(lst_tmp);
+// 	}
+// }
+
+void	ft_printlst_fd(t_list *lst, int fd)
+{
+	t_cmd *content;
+
+	while (lst != NULL)
+	{
+		content = lst->content;
+		ft_strtabprint_fd(content->cmd, fd);
+		dprintf(fd, "content->fdin=%d\n", content->fdin);
+		dprintf(fd, "content->fdin_write_end=%d\n", content->fdin_write_end);
+		dprintf(fd, "content->fdout=%d\n", content->fdout);
+		dprintf(fd, "content->fdout_read_end=%d\n", content->fdout_read_end);
+		dprintf(fd, "content->pid=%d\n", content->pid);
+		dprintf(fd, "\n");
+		lst = lst->next;
+	}
+}
+
+t_list	*ft_lstfreenext(t_list *lst)
+{
+	t_list	*old;
+	t_cmd	*content;
+
+	content = lst->content;
+	old = lst;
+	lst = lst->next;
+	ft_strtabfree(content->cmd);
+	ft_free_debug(content, "content");
+	ft_free_debug(old, "old");
+	return (lst);
+}
+
+void	ft_lstfree(t_list *lst)
+{
+	while (lst != NULL)
+		lst = ft_lstfreenext(lst);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_split.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/23 12:41:42 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/09 15:51:15 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+static char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub;
+	size_t	i;
+
+	if (s == NULL)
+		return (NULL);
+	if (start > ft_strlen(s))
+		sub = ft_calloc_debug(1, sizeof(*sub), "sub in substr");
+	else if (len > ft_strlen(s) - start)
+		sub = ft_calloc_debug(ft_strlen(s) - start + 1, sizeof(*sub), "sub in substr");
+	else
+		sub = ft_calloc_debug(len + 1, sizeof(*sub), "sub in substr");
+	if (sub == NULL)
+		return (NULL);
+	i = 0;
+	while (s[i + start] != '\0' && i < len && start < ft_strlen(s))
+	{
+		sub[i] = s[i + start];
+		i++;
+	}
+	sub[i] = '\0';
+	return (sub);
+}
+
+static size_t	countwords(char const *s, char c)
+{
+	size_t	number_of_words;
+	size_t	flag_new_word;
+	size_t	i;
+
+	flag_new_word = 1;
+	number_of_words = 0;
+	i = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == c)
+			flag_new_word = 1;
+		else
+		{
+			if (flag_new_word)
+			{
+				number_of_words++;
+				flag_new_word = 0;
+			}
+		}
+		i++;
+	}
+	return (number_of_words);
+}
+
+static void	free_tab(char **tab)
+{
+	char	**tab_save;
+
+	tab_save = tab;
+	while (*tab != NULL)
+	{
+		free(*tab);
+		*tab = NULL;
+		tab++;
+	}
+	free(tab_save);
+	tab_save = NULL;
+}
+
+static int	fill_tab(char **tab, char const *s, char c)
+{
+	char	*ptr;
+	char	*startp;
+	char	*endp;
+
+	ptr = (char *)s;
+	while (*ptr != '\0')
+	{
+		if (*ptr == c)
+			ptr++;
+		else
+		{
+			startp = ptr;
+			while (*ptr != c && *ptr != '\0')
+				ptr++;
+			endp = ptr;
+			*tab = ft_substr(s, startp - s, endp - startp);
+			if (*tab == NULL)
+				return (-1);
+			tab++;
+		}
+	}
+	return (0);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	size_t	number_of_words;
+	char	**tab;
+	int		r;
+
+	if (s == NULL)
+		return (NULL);
+	number_of_words = countwords(s, c);
+	tab = (char **)ft_calloc_debug(number_of_words + 1, sizeof(char *), "tab in split");
+	if (tab == NULL)
+		return (NULL);
+	r = fill_tab(tab, s, c);
+	if (r == -1)
+	{
+		free_tab(tab);
+		return (NULL);
+	}
+	return (tab);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_str.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/23 16:07:10 by alefranc          #+#    #+#             */
+/*   Updated: 2022/02/24 16:25:27 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
+{
+	size_t	j;
+	size_t	dst_len;
+	size_t	src_len;
+
+	dst_len = ft_strlen(dest);
+	src_len = ft_strlen(src);
+	j = size;
+	while (*dest != '\0')
+	{
+		dest++;
+		if (j > 0)
+			j--;
+	}
+	while (*src != '\0' && j > 1)
+	{
+		*dest++ = *src++;
+		j--;
+	}
+	*dest = '\0';
+	if (size > dst_len)
+		return (dst_len + src_len);
+	return (size + src_len);
+}
+
+char	*ft_strchr(char *str, char c)
+{
+	while (*str != '\0')
+	{
+		if (*str == c)
+			return (str);
+		str++;
+	}
+	if (*str == c)
+		return (str);
+	return (NULL);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while ((s1[i] != '\0' || s2[i] != '\0') && i < n)
+	{
+		if ((unsigned char)s1[i] != (unsigned char)s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+	size_t	i;
+
+	dup = (char *)ft_calloc(ft_strlen(s) + 1, sizeof(*dup));
+	if (dup == NULL)
+		return (NULL);
+	i = 0;
+	while (s[i] != '\0')
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_strtab.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/23 15:59:33 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/09 16:38:30 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	ft_strtabfree(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		ft_free_debug(tab[i], "tab[i]");
+		i++;
+	}
+	ft_free_debug(tab, "tab");
+}
+
+size_t	ft_strtabsize(char **tab)
+{
+	size_t	i;
+
+	i = 0;
+	while (tab[i] != NULL)
+		i++;
+	return (i);
+}
+
+size_t	ft_strtablen(char **tab)
+{
+	size_t	len;
+	size_t	i;
+
+	i = 0;
+	len = 0;
+	while (tab[i] != NULL)
+	{
+		len += ft_strlen(tab[i]);
+		i++;
+	}
+	return (len);
+}
+
+char	*ft_strtabjoin(char **tab, char *sep)
+{
+	char	*joined;
+	size_t	tot_size;
+	size_t	i;
+
+	if (tab == NULL || sep == NULL)
+		return (NULL);
+	tot_size = ft_strtablen(tab) + (ft_strtabsize(tab) - 1) * ft_strlen(sep);
+	joined = ft_calloc(sizeof(*joined), tot_size + 1);
+	memset(joined, '\0', (tot_size + 1));
+	if (joined == NULL)
+		return (NULL);
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		ft_strlcat(joined, tab[i], tot_size + 1);
+		if (tab[i + 1] != NULL)
+		{
+			ft_strlcat(joined, sep, tot_size + 1);
+		}
+		i++;
+	}
+	return (joined);
+}
+
+void	ft_strtabprint_fd(char **tab, int fd)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		write(fd, tab[i], ft_strlen(tab[i]));
+		write(fd, "\n", 1);
+		i++;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_wrap.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/03 16:43:36 by alefranc          #+#    #+#             */
+/*   Updated: 2022/03/03 17:06:53 by alefranc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "pipex.h"
+
+void	ft_close(int fd)
+{
+	int	ret;
+
+	if (fd == -1)
+		return ;
+	ret = close(fd);
+	if (ret == -1)
+		ft_perror_exit("close() failed", errno);
+}
+
+void	ft_dup2(int fd1, int fd2)
+{
+	int	ret;
+
+	ret = dup2(fd1, fd2);
+	if (ret == -1)
+		ft_perror_exit("dup2() failed", errno);
+}
