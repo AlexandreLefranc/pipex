@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/03 17:39:12 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/09 14:02:04 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ t_list	*ft_lstfreenext(t_list *lst)
 	lst = lst->next;
 	ft_strtabfree(content->cmd);
 	free(old);
+	DEBUG_PRINT("free(): %p\n", old);
 	return (lst);
 }
 
