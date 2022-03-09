@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 14:02:04 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/09 16:11:08 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_list	*ft_lstnew(void *content)
 {
 	t_list	*node;
 
-	node = ft_calloc(1, sizeof(*node));
+	node = ft_calloc_debug(1, sizeof(*node), "node in lstnew");
 	if (node == NULL)
 		return (NULL);
 	node->content = content;
@@ -103,8 +103,10 @@ t_list	*ft_lstfreenext(t_list *lst)
 	old = lst;
 	lst = lst->next;
 	ft_strtabfree(content->cmd);
+	free(content);
+	DEBUG_PRINT("free content: %p\n", content);
 	free(old);
-	DEBUG_PRINT("free(): %p\n", old);
+	DEBUG_PRINT("free node: %p\n", old);
 	return (lst);
 }
 

@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 11:21:01 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/09 15:48:40 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	append_lst(t_list **lst, char *fullcmd, char *path)
 {
 	t_cmd	*new_cmd;
 
-	new_cmd = malloc(sizeof(*new_cmd) * 1);
+	new_cmd = ft_calloc_debug(sizeof(*new_cmd), 1, "new_cmd");
 	if (new_cmd == NULL)
 		ft_perror_exit("malloc() failed", 1);
 	new_cmd->cmd = get_cmd(fullcmd, path);

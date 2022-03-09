@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 11:36:20 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/09 16:19:04 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	run_pipex(t_list *lst, char **envp);
 
 // utils_calloc
 void	*ft_calloc(size_t nmemb, size_t size);
+void	*ft_calloc_debug(size_t nmemb, size_t size, char *msg);
+void	ft_free_debug(void *ptr, char *msg);
 
 // utils_io
 void	ft_putendl_fd(char *str, int fd);

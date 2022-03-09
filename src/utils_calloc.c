@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 16:21:26 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 13:56:16 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/09 16:18:26 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,24 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	DEBUG_PRINT("malloc(): %p\n", ptr);
 	ft_bzero(ptr, nmemb * size);
 	return (ptr);
+}
+
+void	*ft_calloc_debug(size_t nmemb, size_t size, char *msg)
+{
+	void	*ptr;
+
+	if (nmemb * size > 2147483647)
+		return (NULL);
+	ptr = (void *)malloc(nmemb * size);
+	dprintf(2, "malloc %p: %s\n", ptr, msg);
+	if (ptr == NULL)
+		return (NULL);
+	ft_bzero(ptr, nmemb * size);
+	return (ptr);
+}
+
+void	ft_free_debug(void *ptr, char *msg)
+{
+	dprintf(2, "free %p: %s", ptr, msg);
+	free(ptr);
 }

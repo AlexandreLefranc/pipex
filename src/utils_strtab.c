@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:59:33 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 13:54:17 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/09 16:09:56 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	ft_strtabfree(char **tab)
 	while (tab[i] != NULL)
 	{
 		free(tab[i]);
-		DEBUG_PRINT("    free: %p\n", tab[i]);
+		DEBUG_PRINT("    free tab[i]: %p\n", tab[i]);
 		i++;
 	}
 	free(tab);
-	DEBUG_PRINT("free: %p\n\n", tab);
+	DEBUG_PRINT("free tab: %p\n\n", tab);
 }
 
 size_t	ft_strtabsize(char **tab)
