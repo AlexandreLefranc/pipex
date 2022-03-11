@@ -1,110 +1,78 @@
-malloc	0x7fa5bfc00620: new_cmd
-malloc	0x7fa5bfc02ad0: tab in split
-malloc	0x7fa5bfc02ae0: sub in substr
-malloc	0x7fa5bfc02af0: tab in split
-malloc	0x7fa5bfc02b50: sub in substr
-malloc	0x7fa5bfc02b70: sub in substr
-malloc	0x7fa5bfc02b80: sub in substr
-malloc	0x7fa5bfc02b90: sub in substr
-malloc	0x7fa5bfc02ba0: sub in substr
-malloc	0x7fa5bfc02bb0: sub in substr
-malloc	0x7fa5bfc02bd0: sub in substr
-malloc	0x7fa5bfc02c10: sub in substr
-malloc	0x7fa5bfc02c30: sub in substr
-malloc	0x7fa5bfc02c50: sub in substr
-malloc	0x7fa5bfc02c70: joined
-free	0x7fa5bfc02c70: full_pathname
-malloc	0x7fa5bfc02c70: joined
-free	0x7fa5bfc02c70: full_pathname
-malloc	0x7fa5bfc02bc0: joined
-free	0x7fa5bfc02bc0: full_pathname
-malloc	0x7fa5bfc02bc0: joined
-free	0x7fa5bfc02b50: tab[i]
-free	0x7fa5bfc02b70: tab[i]
-free	0x7fa5bfc02b80: tab[i]
-free	0x7fa5bfc02b90: tab[i]
-free	0x7fa5bfc02ba0: tab[i]
-free	0x7fa5bfc02bb0: tab[i]
-free	0x7fa5bfc02bd0: tab[i]
-free	0x7fa5bfc02c10: tab[i]
-free	0x7fa5bfc02c30: tab[i]
-free	0x7fa5bfc02c50: tab[i]
-free	0x7fa5bfc02af0: tab
-free	0x7fa5bfc02ae0: cmd_tmp
-malloc	0x7fa5bfc02ae0: node in lstnew
-malloc	0x7fa5bfc02bd0: new_cmd
-malloc	0x7fa5bfc02bf0: tab in split
-malloc	0x7fa5bfc02c00: sub in substr
-malloc	0x7fa5bfc02c10: tab in split
-malloc	0x7fa5bfc02c70: sub in substr
-malloc	0x7fa5bfc02af0: sub in substr
-malloc	0x7fa5bfc02b00: sub in substr
-malloc	0x7fa5bfc02b10: sub in substr
-malloc	0x7fa5bfc02b20: sub in substr
-malloc	0x7fa5bfc02b30: sub in substr
-malloc	0x7fa5bfc02b40: sub in substr
-malloc	0x7fa5bfc02b80: sub in substr
-malloc	0x7fa5bfc02ba0: sub in substr
-malloc	0x7fa5bfc02c90: sub in substr
-malloc	0x7fa5bfc02cb0: joined
-free	0x7fa5bfc02cb0: full_pathname
-malloc	0x7fa5bfc02cb0: joined
-free	0x7fa5bfc02cb0: full_pathname
-malloc	0x7fa5bfc02cd0: joined
-free	0x7fa5bfc02c70: tab[i]
-free	0x7fa5bfc02af0: tab[i]
-free	0x7fa5bfc02b00: tab[i]
-free	0x7fa5bfc02b10: tab[i]
-free	0x7fa5bfc02b20: tab[i]
-free	0x7fa5bfc02b30: tab[i]
-free	0x7fa5bfc02b40: tab[i]
-free	0x7fa5bfc02b80: tab[i]
-free	0x7fa5bfc02ba0: tab[i]
-free	0x7fa5bfc02c90: tab[i]
-free	0x7fa5bfc02c10: tab
-free	0x7fa5bfc02c00: cmd_tmp
-malloc	0x7fa5bfc02c00: node in lstnew
-malloc	0x7fa5bfc02c10: new_cmd
-malloc	0x7fa5bfc02c30: tab in split
-malloc	0x7fa5bfc02c40: sub in substr
-malloc	0x7fa5bfc02c50: tab in split
-malloc	0x7fa5bfc02cb0: sub in substr
-malloc	0x7fa5bfc02af0: sub in substr
-malloc	0x7fa5bfc02b00: sub in substr
-malloc	0x7fa5bfc02b10: sub in substr
-malloc	0x7fa5bfc02b20: sub in substr
-malloc	0x7fa5bfc02b30: sub in substr
-malloc	0x7fa5bfc02b40: sub in substr
-malloc	0x7fa5bfc02b80: sub in substr
-malloc	0x7fa5bfc02ba0: sub in substr
-malloc	0x7fa5bfc02ce0: sub in substr
-malloc	0x7fa5bfc02d00: joined
-free	0x7fa5bfc02d00: full_pathname
-malloc	0x7fa5bfc02d00: joined
-free	0x7fa5bfc02d00: full_pathname
-malloc	0x7fa5bfc02d20: joined
-free	0x7fa5bfc02cb0: tab[i]
-free	0x7fa5bfc02af0: tab[i]
-free	0x7fa5bfc02b00: tab[i]
-free	0x7fa5bfc02b10: tab[i]
-free	0x7fa5bfc02b20: tab[i]
-free	0x7fa5bfc02b30: tab[i]
-free	0x7fa5bfc02b40: tab[i]
-free	0x7fa5bfc02b80: tab[i]
-free	0x7fa5bfc02ba0: tab[i]
-free	0x7fa5bfc02ce0: tab[i]
-free	0x7fa5bfc02c50: tab
-free	0x7fa5bfc02c40: cmd_tmp
-malloc	0x7fa5bfc02c40: node in lstnew
-free	0x7fa5bfc02bc0: tab[i]
-free	0x7fa5bfc02ad0: tab
-free	0x7fa5bfc00620: content
-free	0x7fa5bfc02ae0: old
-free	0x7fa5bfc02cd0: tab[i]
-free	0x7fa5bfc02bf0: tab
-free	0x7fa5bfc02bd0: content
-free	0x7fa5bfc02c00: old
-free	0x7fa5bfc02d20: tab[i]
-free	0x7fa5bfc02c30: tab
-free	0x7fa5bfc02c10: content
-free	0x7fa5bfc02c40: old
+malloc	0x7f8e17400640: new_cmd
+malloc	0x7f8e17400690: tab in split
+malloc	0x7f8e174006a0: sub in substr
+malloc	0x7f8e17402ae0: tab in split
+malloc	0x7f8e17402b40: sub in substr
+malloc	0x7f8e17402b60: sub in substr
+malloc	0x7f8e17402b70: sub in substr
+malloc	0x7f8e17402b80: sub in substr
+malloc	0x7f8e17402b90: sub in substr
+malloc	0x7f8e17402ba0: sub in substr
+malloc	0x7f8e17402bb0: sub in substr
+malloc	0x7f8e17402be0: sub in substr
+malloc	0x7f8e17402c00: sub in substr
+malloc	0x7f8e17402bd0: sub in substr
+malloc	0x7f8e17402c20: sub in substr
+malloc	0x7f8e17402c40: joined
+free	0x7f8e17402c40: full_pathname
+malloc	0x7f8e17402c40: joined
+free	0x7f8e17402c40: full_pathname
+malloc	0x7f8e17402c60: joined
+free	0x7f8e17402c60: full_pathname
+malloc	0x7f8e17402c60: joined
+free	0x7f8e17402b40: tab[i]
+free	0x7f8e17402b60: tab[i]
+free	0x7f8e17402b70: tab[i]
+free	0x7f8e17402b80: tab[i]
+free	0x7f8e17402b90: tab[i]
+free	0x7f8e17402ba0: tab[i]
+free	0x7f8e17402bb0: tab[i]
+free	0x7f8e17402be0: tab[i]
+free	0x7f8e17402c00: tab[i]
+free	0x7f8e17402bd0: tab[i]
+free	0x7f8e17402c20: tab[i]
+free	0x7f8e17402ae0: tab
+free	0x7f8e174006a0: cmd_tmp
+malloc	0x7f8e174006a0: node in lstnew
+malloc	0x7f8e17402ae0: new_cmd
+malloc	0x7f8e17402b00: tab in split
+malloc	0x7f8e17402b10: sub in substr
+malloc	0x7f8e17402b20: tab in split
+malloc	0x7f8e17402b80: sub in substr
+malloc	0x7f8e17402ba0: sub in substr
+malloc	0x7f8e17402bb0: sub in substr
+malloc	0x7f8e17402bc0: sub in substr
+malloc	0x7f8e17402bd0: sub in substr
+malloc	0x7f8e17402be0: sub in substr
+malloc	0x7f8e17402bf0: sub in substr
+malloc	0x7f8e17402c10: sub in substr
+malloc	0x7f8e17402c30: sub in substr
+malloc	0x7f8e17402c50: sub in substr
+malloc	0x7f8e17402c70: sub in substr
+malloc	0x7f8e17402c90: joined
+free	0x7f8e17402c90: full_pathname
+malloc	0x7f8e17402c90: joined
+free	0x7f8e17402c90: full_pathname
+malloc	0x7f8e17402cb0: joined
+free	0x7f8e17402b80: tab[i]
+free	0x7f8e17402ba0: tab[i]
+free	0x7f8e17402bb0: tab[i]
+free	0x7f8e17402bc0: tab[i]
+free	0x7f8e17402bd0: tab[i]
+free	0x7f8e17402be0: tab[i]
+free	0x7f8e17402bf0: tab[i]
+free	0x7f8e17402c10: tab[i]
+free	0x7f8e17402c30: tab[i]
+free	0x7f8e17402c50: tab[i]
+free	0x7f8e17402c70: tab[i]
+free	0x7f8e17402b20: tab
+free	0x7f8e17402b10: cmd_tmp
+malloc	0x7f8e17402b10: node in lstnew
+free	0x7f8e17402c60: tab[i]
+free	0x7f8e17400690: tab
+free	0x7f8e17400640: content
+free	0x7f8e174006a0: old
+free	0x7f8e17402cb0: tab[i]
+free	0x7f8e17402b00: tab
+free	0x7f8e17402ae0: content
+free	0x7f8e17402b10: old

@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/21 16:02:02 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 16:37:28 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/11 15:19:15 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_list	*ft_lstnew(void *content)
 {
 	t_list	*node;
 
-	node = ft_calloc_debug(1, sizeof(*node), "node in lstnew");
+	node = ft_calloc(1, sizeof(*node));
 	if (node == NULL)
 		return (NULL);
 	node->content = content;
@@ -41,44 +41,9 @@ void	ft_lstadd_back(t_list **alst, t_list *new)
 	lst->next = new;
 }
 
-// t_list	*ft_lstreverse(t_list *lst)
-// {
-// 	t_list	*lst_current;
-// 	t_list	*lst_next;
-// 	t_list	*lst_tmp;
-//
-// 	if (lst == NULL)
-// 		return (lst);
-// 	lst_tmp = NULL;
-// 	lst_current = lst;
-// 	while (lst_current != NULL)
-// 	{
-// 		lst_next = lst_current->next;
-// 		lst_current->next = lst_tmp;
-// 		lst_tmp = lst_current;
-// 		lst_current = lst_next;
-// 	}
-// 	return (lst_tmp);
-// }
-
-// void	ft_freelst(t_list *lst)
-// {
-// 	t_cmd	*content;
-// 	t_list	*lst_tmp;
-//
-// 	while (lst != NULL)
-// 	{
-// 		lst_tmp = lst;
-// 		content = lst->content;
-// 		ft_strtabfree(content->cmd);
-// 		lst = lst->next;
-// 		free(lst_tmp);
-// 	}
-// }
-
 void	ft_printlst_fd(t_list *lst, int fd)
 {
-	t_cmd *content;
+	t_cmd	*content;
 
 	while (lst != NULL)
 	{
@@ -103,8 +68,8 @@ t_list	*ft_lstfreenext(t_list *lst)
 	old = lst;
 	lst = lst->next;
 	ft_strtabfree(content->cmd);
-	ft_free_debug(content, "content");
-	ft_free_debug(old, "old");
+	free(content);
+	free(old);
 	return (lst);
 }
 

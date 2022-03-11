@@ -6,13 +6,13 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 17:08:39 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 17:14:49 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/11 15:18:51 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static char *get_path(char **envp)
+static char	*get_path(char **envp)
 {
 	while (*envp != NULL)
 	{
@@ -20,8 +20,7 @@ static char *get_path(char **envp)
 			return (*envp + 5);
 		envp++;
 	}
-	ft_putendl_fd("No PATH found in environment!", 2);
-	exit(1);
+	return (NULL);
 }
 
 static char	*path_search(char *cmd, char *path)
@@ -44,7 +43,7 @@ static char	*path_search(char *cmd, char *path)
 			ft_strtabfree(path_splitted);
 			return (full_pathname);
 		}
-		ft_free_debug(full_pathname, "full_pathname");
+		free(full_pathname);
 		i++;
 	}
 	ft_strtabfree(path_splitted);
@@ -57,15 +56,15 @@ static char	**get_cmd(char *fullcmd, char *path)
 	char	*cmd_tmp;
 
 	cmd = ft_split(fullcmd, ' ');
-	if (cmd[0] == NULL)
-		return (cmd);
 	if (cmd == NULL)
 		ft_perror_exit("ft_split() failed", 1);
-	if (ft_strchr(cmd[0], '/'))
+	if (cmd[0] == NULL)
+		return (cmd);
+	if (ft_strchr(cmd[0], '/') || path == NULL)
 		return (cmd);
 	cmd_tmp = cmd[0];
 	cmd[0] = path_search(cmd[0], path);
-	ft_free_debug(cmd_tmp, "cmd_tmp");
+	free(cmd_tmp);
 	return (cmd);
 }
 
@@ -73,7 +72,7 @@ static void	append_lst(t_list **lst, char *fullcmd, char *path)
 {
 	t_cmd	*new_cmd;
 
-	new_cmd = ft_calloc_debug(sizeof(*new_cmd), 1, "new_cmd");
+	new_cmd = ft_calloc(sizeof(*new_cmd), 1);
 	if (new_cmd == NULL)
 		ft_perror_exit("malloc() failed", 1);
 	new_cmd->cmd = get_cmd(fullcmd, path);

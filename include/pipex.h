@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 13:24:40 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 16:19:04 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/11 15:19:34 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,6 @@
 // Macros
 # define WRITE_END 1
 # define READ_END 0
-
-# define DEBUG 1
-# define DEBUG_PRINT(fmt, ...) \
-	do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
-							__LINE__, __func__, __VA_ARGS__); } while (0)
 
 // User-defined types
 typedef struct s_cmd

@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 15:59:33 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 16:46:15 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/11 14:37:29 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	ft_strtabfree(char **tab)
 	i = 0;
 	while (tab[i] != NULL)
 	{
-		ft_free_debug(tab[i], "tab[i]");
+		free(tab[i]);
 		i++;
 	}
-	ft_free_debug(tab, "tab");
+	free(tab);
 }
 
 size_t	ft_strtabsize(char **tab)
@@ -59,7 +59,7 @@ char	*ft_strtabjoin(char **tab, char *sep)
 	if (tab == NULL || sep == NULL)
 		return (NULL);
 	tot_size = ft_strtablen(tab) + (ft_strtabsize(tab) - 1) * ft_strlen(sep);
-	joined = ft_calloc_debug(sizeof(*joined), tot_size + 1, "joined");
+	joined = ft_calloc(sizeof(*joined), tot_size + 1);
 	memset(joined, '\0', (tot_size + 1));
 	if (joined == NULL)
 		return (NULL);

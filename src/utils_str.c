@@ -6,7 +6,7 @@
 /*   By: alefranc <alefranc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/23 16:07:10 by alefranc          #+#    #+#             */
-/*   Updated: 2022/03/09 16:47:20 by alefranc         ###   ########.fr       */
+/*   Updated: 2022/03/11 14:36:34 by alefranc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char	*ft_strdup(const char *s)
 	char	*dup;
 	size_t	i;
 
-	dup = (char *)ft_calloc_debug(ft_strlen(s) + 1, sizeof(*dup), "dup");
+	dup = (char *)ft_calloc(ft_strlen(s) + 1, sizeof(*dup));
 	if (dup == NULL)
 		return (NULL);
 	i = 0;

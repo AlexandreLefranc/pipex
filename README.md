@@ -373,6 +373,7 @@ chmod 444 rdonly
 
 
 ```
+# Run as bash, not zsh
 ./pipex Makefile "" "" out_mine
 < Makefile | > out_real
 ```
