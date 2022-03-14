@@ -383,3 +383,10 @@ chmod 444 rdonly
 ./pipex "" ""
 < Makefile | ls > out_real
 ```
+
+```
+./pipex /dev/stdin cat cat cat ls out
+```
+
+This should give prompt back after 3 enters. If not, probably that it misses a `close()`
+somewhere. It is needed for minishell.
